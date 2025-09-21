@@ -20,6 +20,11 @@
   --color-danger-surface: var(--color-danger-surface);
   --color-success-main: var(--color-success-main);
   --color-brand-blue_whale-color-01: var(--color-brand-blue_whale-color-01);
+  --breakpoint-xs: 480px;
+  --breakpoint-phone: 768px;
+  --breakpoint-tablet: 992px;
+  --breakpoint-laptop: 1200px;
+  --breakpoint-desktop: 1600px;
   /* end my variables */
 
   --color-background: var(--background);

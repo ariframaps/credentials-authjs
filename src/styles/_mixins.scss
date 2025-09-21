@@ -1,0 +1,99 @@
+@use "variables" as *; // import all variables from _variables.scss
+
+// =======================
+// FLEXBOX MIXINS
+// =======================
+@mixin flex($direction: row, $justify: flex-start, $align: stretch, $gap: 0) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+  gap: $gap;
+}
+
+// =======================
+// CENTERING MIXINS
+// =======================
+@mixin center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+// =======================
+// MEDIA QUERY MIXINS
+// =======================
+@mixin media($size) {
+  $width: map-get($breakpoints, $size);
+  @if $width {
+    @media (max-width: $width) {
+      @content;
+    }
+  } @else {
+    @warn "No value found for breakpoint `#{$size}`.";
+  }
+}
+
+// =======================
+// TEXT MIXINS
+// =======================
+@mixin text($size: 16px, $weight: 400, $color: #000, $align: left) {
+  font-size: $size;
+  font-weight: $weight;
+  color: $color;
+  text-align: $align;
+}
+
+// =======================
+// GRID MIXINS
+// =======================
+
+// // Simple grid with columns and gap
+// @mixin grid($columns: 2, $gap: 16px) {
+//   display: grid;
+//   grid-template-columns: repeat($columns, 1fr);
+//   gap: $gap;
+// }
+
+// // Grid with custom template
+// @mixin grid-template($template-columns, $template-rows: auto, $gap: 16px) {
+//   display: grid;
+//   grid-template-columns: $template-columns;
+//   grid-template-rows: $template-rows;
+//   gap: $gap;
+// }
+
+// // Auto-fit / auto-fill responsive grid
+// @mixin grid-auto($min: 200px, $max: 1fr, $gap: 16px) {
+//   display: grid;
+//   grid-template-columns: repeat(auto-fit, minmax($min, $max));
+//   gap: $gap;
+// }
+
+// // Center items in grid
+// @mixin grid-center($justify: center, $align: center) {
+//   display: grid;
+//   justify-items: $justify;
+//   align-items: $align;
+// }
+
+// // Example: responsive grid
+// @mixin grid-responsive(
+//   $columns-xs: 1,
+//   $columns-sm: 2,
+//   $columns-md: 3,
+//   $gap: 16px
+// ) {
+//   display: grid;
+//   gap: $gap;
+
+//   grid-template-columns: repeat($columns-md, 1fr);
+
+//   @include respond(sm) {
+//     grid-template-columns: repeat($columns-sm, 1fr);
+//   }
+
+//   @include respond(xs) {
+//     grid-template-columns: repeat($columns-xs, 1fr);
+//   }
+// }

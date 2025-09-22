@@ -3,19 +3,18 @@ import { SVGProps } from "react";
 const SettingIcon = (props: SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="1em"
-    height="1em"
+    stroke="currentColor"
     fill="none"
     {...props}>
     <path
-      stroke="#616161"
+      // stroke="#616161"
       strokeLinecap="round"
       strokeLinejoin="round"
       strokeWidth={1.5}
       d="M10 13.75a3.75 3.75 0 1 0 0-7.5 3.75 3.75 0 0 0 0 7.5Z"
     />
     <path
-      stroke="#616161"
+      // stroke="#616161"
       strokeLinecap="round"
       strokeLinejoin="round"
       strokeWidth={1.5}

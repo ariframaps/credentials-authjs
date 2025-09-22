@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className={`${styles.container}`}>
-      <header
+      <nav
         className={`${styles.header} bg-brand-blue_whale-color-01 text-neutral-white`}>
         <Image
           className={`${styles.header__logo}`}
@@ -30,8 +30,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </Button>
           </Link>
         </div>
-      </header>
-      {children}
+      </nav>
+      <main className={`${styles.main}`}>{children}</main>
     </div>
   );
 }

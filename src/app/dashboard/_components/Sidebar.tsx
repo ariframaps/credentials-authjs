@@ -1,0 +1,106 @@
+"use client";
+
+import Image from "next/image";
+import styles from "./Sidebar.module.scss";
+import Link from "next/link";
+import LayoutIcon from "@/components/svg/LayoutIcon";
+import ReservationIcon from "@/components/svg/ReservationIcon";
+import BedIcon from "@/components/svg/BedIcon";
+import StarIcon from "@/components/svg/StarIcon";
+import SettingIcon from "@/components/svg/SettingIcon";
+import { Calendar } from "lucide-react";
+import { usePathname } from "next/navigation";
+
+// all nav link for side bar
+const navItems = [
+  {
+    href: "/dashboard",
+    label: "Dashboard",
+    icon: <LayoutIcon width={20} height={20} viewBox="0 0 20 20" />,
+  },
+  {
+    href: "/rates",
+    label: "Rates & Availability",
+    icon: <Calendar width={20} height={20} />,
+  },
+  {
+    href: "/reservation",
+    label: "Reservation",
+    icon: <ReservationIcon width={20} height={20} viewBox="0 0 20 20" />,
+  },
+  {
+    href: "/room",
+    label: "Room",
+    icon: <BedIcon width={20} height={20} viewBox="0 0 20 20" />,
+  },
+  {
+    href: "/reviews",
+    label: "Guest review",
+    icon: <StarIcon width={20} height={20} viewBox="0 0 20 20" />,
+  },
+  {
+    href: "/settings",
+    label: "Setting",
+    icon: <SettingIcon width={20} height={20} viewBox="0 0 20 20" />,
+  },
+];
+
+const Sidebar = () => {
+  const pathname = usePathname(); // get curretn path
+
+  return (
+    <div
+      className={`${styles.container} border-r-[1px] border-neutral-separator bg-neutral-white`}>
+      <div
+        className={`${styles.header} border-b-[1px] border-neutral-separator`}>
+        <Image
+          src={"/Logo-black.png"}
+          alt="Go For Umrah Logo"
+          width={146}
+          height={26}
+        />
+      </div>
+      <ul className={styles.nav}>
+        {navItems.map((item) => (
+          <SidebarLink
+            key={item.href}
+            {...item}
+            active={pathname === item.href} // ✅ active check
+          />
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+// link component
+const SidebarLink = ({
+  href,
+  label,
+  icon,
+  active,
+}: {
+  href: string;
+  label: string;
+  icon: React.ReactNode;
+  active?: boolean;
+}) => {
+  return (
+    <Link
+      href={href}
+      className={`${
+        styles.nav__item
+      } duration-200 flex items-center gap-2 rounded-[8px] text-[14px]
+        ${
+          active
+            ? "text-brand-green-color-01 bg-neutral-light font-medium"
+            : "text-neutral-primary font-normal hover:text-brand-green-color-01"
+        }
+      `}>
+      {icon}
+      <span>{label}</span>
+    </Link>
+  );
+};
+
+export default Sidebar;

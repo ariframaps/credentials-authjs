@@ -1,0 +1,22 @@
+@use "@/styles/mixins" as m;
+
+.container {
+  @include m.flex($direction: column, $justify: start);
+  height: 100%;
+}
+
+.header {
+  padding-inline: 24px;
+  padding-block: 40px 24px;
+  @include m.center;
+}
+
+.nav {
+  padding: 24px;
+
+  &__item {
+    padding-inline: 16px;
+    padding-block: 14px;
+    @include m.flex($gap: 12, $align: center);
+  }
+}

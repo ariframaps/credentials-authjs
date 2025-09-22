@@ -2,8 +2,8 @@
 
 .container {
   @include m.flex($justify: center);
+  height: 100%;
   width: 100%;
-  flex: 1;
 
   &__left {
     flex: 1;

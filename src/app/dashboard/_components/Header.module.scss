@@ -1,0 +1,45 @@
+@use "@/styles/mixins" as m;
+
+.container {
+  padding-inline: 24px;
+  padding-block: 24px 16px;
+  @include m.flex($justify: space-between, $align: center);
+}
+
+.left {
+  flex-shrink: 0;
+  @include m.flex($justify: space-between, $align: center, $gap: 20);
+
+  &__property {
+    @include m.flex($justify: space-between, $align: center, $gap: 8);
+
+    &__details {
+      @include m.flex($direction: column, $justify: space-between);
+    }
+  }
+}
+
+.right {
+  @include m.flex($justify: space-between, $align: center, $gap: 32);
+
+  &__search {
+    width: 320px;
+    position: relative;
+    @include m.flex($align: center);
+
+    &__icon {
+      position: absolute;
+      left: 16px;
+    }
+
+    & input {
+      height: 40px;
+    }
+  }
+
+  &__userDetails {
+    flex-shrink: 0;
+    @include m.flex($justify: space-between, $align: center, $gap: 12);
+    white-space: nowrap;
+  }
+}

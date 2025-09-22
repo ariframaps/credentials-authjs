@@ -1,29 +1,27 @@
 import InfoIcon from "./svg/InfoIcon";
 
-export const InputComponent = ({
-  name,
-  label,
-  isError = false,
-  message,
-  children,
-}: {
+interface Props {
   name: string;
   label: string;
   isError: boolean;
   message?: string;
   children: React.ReactNode;
-}) => {
+}
+
+export const InputComponent = (props: Props) => {
   return (
     <div className={`flex flex-col gap-[8px]`}>
       <div className="flex items-center gap-2">
         <label
           className={`${
-            isError ? "text-text-danger-tertiary" : "text-neutral-secondary"
+            props.isError
+              ? "text-text-danger-tertiary"
+              : "text-neutral-secondary"
           } font-medium text-[14px] leading-[1.5em]`}
-          htmlFor={name}>
-          {label}
+          htmlFor={props.name}>
+          {props.label}
         </label>
-        {isError && (
+        {props.isError && (
           <InfoIcon
             width={15}
             height={15}
@@ -32,8 +30,10 @@ export const InputComponent = ({
           />
         )}
       </div>
-      {children}
-      {isError && <span className="text-text-danger-tertiary">{message}</span>}
+      {props.children}
+      {props.isError && (
+        <span className="text-text-danger-tertiary">{props.message}</span>
+      )}
     </div>
   );
 };

@@ -3,12 +3,10 @@ import { SVGProps } from "react";
 const BedIcon = (props: SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="1em"
-    height="1em"
+    stroke="currentColor"
     fill="none"
     {...props}>
     <path
-      stroke="#616161"
       strokeLinecap="round"
       strokeLinejoin="round"
       strokeWidth={1.5}

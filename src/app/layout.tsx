@@ -46,10 +46,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${generalSans.variable}`}>
-        {children}
-        <span>root layout</span>
-      </body>
+      <body className={`${generalSans.variable}`}>{children}</body>
     </html>
   );
 }

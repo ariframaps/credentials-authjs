@@ -1,0 +1,38 @@
+@use "@/styles/mixins" as m;
+
+.container {
+  @include m.flex($direction: column, $gap: 32);
+  @include m.media(phone) {
+    gap: 24px;
+  }
+
+  &__header {
+    @include m.flex($direction: column, $gap: 12);
+    @include m.media(phone) {
+      gap: 8px;
+    }
+  }
+
+  &__form {
+    @include m.flex($direction: column, $gap: 24);
+
+    @include m.media(phone) {
+      gap: 18px;
+    }
+
+    &__inputs {
+      @include m.flex($direction: column, $gap: 24);
+      max-height: 25vw;
+      overflow-y: auto;
+
+      @include m.media(tablet) {
+        max-height: 35vw;
+      }
+
+      @include m.media(phone) {
+        max-height: fit-content;
+        gap: 18px;
+      }
+    }
+  }
+}

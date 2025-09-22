@@ -3,6 +3,11 @@
 .container {
   @include m.flex($direction: column);
   height: 100vh;
+
+  @include m.media(phone) {
+    min-height: 100vh;
+    height: fit-content;
+  }
 }
 
 .header {
@@ -17,44 +22,29 @@
   @include m.media(xs) {
     padding-inline: 5%;
   }
-  #{&}__logo {
+
+  &__logo {
     object-fit: contain;
   }
 
-  #{&}__info {
+  &__info {
     @include m.flex($gap: 32, $align: center);
     @include m.media(phone) {
       gap: 16px;
     }
-  }
 
-  #{&}__languageBtn {
-    @include m.flex($gap: 4);
+    &__languageBtn {
+      @include m.flex($gap: 4);
+    }
   }
 }
 
 .main {
   @include m.flex($justify: center);
-  width: 100vw;
+  width: 100%;
   flex: 1;
 
-  #{&}__children {
-    @include m.flex($direction: column, $justify: space-between);
-    flex: 1;
-    margin-inline: 120px 72px;
-    margin-block: 96px 32px;
-
-    @include m.media(tablet) {
-      margin-inline: 72px 40px;
-      margin-block: 48px 20px;
-    }
-    @include m.media(phone) {
-      margin-inline: 8% 8% !important;
-      margin-block: 45px 20px;
-    }
-  }
-
-  #{&}__banner {
+  &__banner {
     width: 50%;
     object-fit: cover;
     @include m.media(tablet) {

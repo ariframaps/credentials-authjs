@@ -1,6 +1,8 @@
 import Image from "next/image";
-import styles from "./layout.module.scss";
+import styles from "./_styles/layout.module.scss";
 import GlobeIcon from "@/components/svg/GlobeIcon";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -15,23 +17,22 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           height={26}
         />
         <div className={`${styles.header__info}`}>
-          <button className={`${styles.header__languageBtn}`}>
+          <button className={`${styles.header__info__languageBtn}`}>
             <GlobeIcon width={24} height={24} />
             <span>En</span>
           </button>
           <span className="h-full w-[1px] bg-neutral-subtle"></span>
-          <button className="px-[24px] py-[12px] border-[1.5px] border-brand-green-color-01 rounded-[8px]">
-            Help
-          </button>
+          <Link href={"/help"}>
+            <Button
+              variant={"transparent"}
+              className="px-[24px] py-[12px] rounded-[8px] text-neutral-white font-semibold text-[12px] hover:bg-brand-green-color-01">
+              Help
+            </Button>
+          </Link>
         </div>
       </header>
       <main className={`${styles.main}`}>
-        <section className={`${styles.main__children}`}>
-          {children}
-          <p className="text-neutral-subtle">
-            All rights reserved. Copyright 2022 – GoForUmrah.com™
-          </p>
-        </section>
+        {children}
         <Image
           className={`${styles.main__banner}`}
           src={"/auth-banner.png"}

@@ -12,20 +12,22 @@ interface InputProps extends React.ComponentProps<"input"> {
 function Input({ className, type, isError, ...props }: InputProps) {
   const [showPassword, setShowPassword] = React.useState(false);
 
+  const inputClasses = cn(
+    "placeholder:text-neutral-subtle min-h-[48px] w-full min-w-0 rounded-[10px] border px-[16px] py-[13px] text-[14px] transition-[color,box-shadow] outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+    "focus-visible:ring-inset focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[1px]",
+    isError
+      ? "border-text-danger-tertiary focus-visible:border-text-danger-tertiary focus-visible:ring-red-500/50 bg-danger-surface"
+      : "border-neutral-input bg-neutral-light",
+    className
+  );
+
   if (type === "password") {
     return (
       <div className="relative flex items-center">
         <input
           type={showPassword ? "text" : "password"}
           data-slot="input"
-          className={cn(
-            "placeholder:text-neutral-subtle min-h-[48px] w-full min-w-0 rounded-[10px] border px-[16px] py-[13px] text-[14px] transition-[color,box-shadow] outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
-            "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
-            isError
-              ? "border-text-danger-tertiary focus-visible:border-text-danger-tertiary focus-visible:ring-red-500/50 bg-danger-surface"
-              : "border-neutral-input bg-neutral-light",
-            className
-          )}
+          className={inputClasses}
           {...props}
         />
         <div
@@ -42,19 +44,7 @@ function Input({ className, type, isError, ...props }: InputProps) {
   }
 
   return (
-    <input
-      type={type}
-      data-slot="input"
-      className={cn(
-        "placeholder:text-neutral-subtle min-h-[48px] w-full min-w-0 rounded-[10px] border px-[16px] py-[13px] text-[14px] transition-[color,box-shadow] outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
-        "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
-        isError
-          ? "border-text-danger-tertiary focus-visible:border-text-danger-tertiary focus-visible:ring-red-500/50 bg-danger-surface"
-          : "border-neutral-input bg-neutral-light",
-        className
-      )}
-      {...props}
-    />
+    <input type={type} data-slot="input" className={inputClasses} {...props} />
   );
 }
 

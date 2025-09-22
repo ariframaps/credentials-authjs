@@ -1,5 +1,5 @@
 import Link from "next/link";
-import styles from "./_styles/layout.module.scss";
+import styles from "./layout.module.scss";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (

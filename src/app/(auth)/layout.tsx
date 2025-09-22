@@ -1,5 +1,5 @@
 import Image from "next/image";
-import styles from "./_styles/layout.module.scss";
+import styles from "./layout.module.scss";
 import GlobeIcon from "@/components/svg/GlobeIcon";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -25,7 +25,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <Link href={"/help"}>
             <Button
               variant={"transparent"}
-              className="px-[24px] py-[12px] rounded-[8px] text-neutral-white font-semibold text-[12px] hover:bg-brand-green-color-01">
+              className="cursor-pointer px-[24px] py-[12px] rounded-[8px] text-neutral-white font-semibold text-[12px] hover:bg-brand-green-color-01">
               Help
             </Button>
           </Link>

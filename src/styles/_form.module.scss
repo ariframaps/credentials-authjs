@@ -6,6 +6,11 @@
     gap: 24px;
   }
 
+  &__backBtn {
+    @include m.flex($align: end, $gap: 8);
+    width: fit-content;
+  }
+
   &__header {
     @include m.flex($direction: column, $gap: 12);
     @include m.media(phone) {
@@ -22,7 +27,7 @@
 
     &__inputs {
       @include m.flex($direction: column, $gap: 24);
-      max-height: 25vw;
+      max-height: 23vw;
       overflow-y: auto;
 
       @include m.media(tablet) {
@@ -33,6 +38,12 @@
         max-height: fit-content;
         gap: 18px;
       }
+    }
+
+    &__info {
+      @include m.flex($align: center, $gap: 12);
+      padding-inline: 20px;
+      padding-block: 16px;
     }
   }
 }

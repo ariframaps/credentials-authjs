@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import styles from "./_styles/page.module.scss";
+import styles from "./page.module.scss";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -11,89 +11,85 @@ import {
 import { InputComponent } from "@/components/InputComponent";
 import FormHeader from "@/components/FormHeader";
 import Link from "next/link";
+import LeftArrow from "@/components/svg/LeftArrow";
+import InfoIcon from "@/components/svg/InfoIcon";
 
 export default function Page() {
   return (
     <div className={`${styles.container}`}>
+      {/* back to previous step button */}
+
+      <Link
+        href={"/sign-up/step-1"}
+        className={`${styles.container__backBtn} text-neutral-primary font-semibold text-[18px]`}>
+        <LeftArrow
+          className="text-brand-green-color-01"
+          width={20}
+          height={20}
+          viewBox="0 0 20 20"
+        />
+        Back
+      </Link>
+
       {/* header */}
       <div className={`${styles.container__header}`}>
         <FormHeader
-          title={"Create your partner account"}
-          subtitle={"Create an account to list and manage your property."}
+          title={"Contact details"}
+          subtitle={
+            "Create your partner account create an account to list and manage your property"
+          }
         />
       </div>
 
       {/* form */}
       <form className={`${styles.container__form}`}>
         <div className={`${styles.container__form__inputs}`}>
+          {/* first name */}
           <InputComponent
-            name={"email"}
-            label={"Email Address"}
+            name={"firstname"}
+            label={"First name"}
             isError={false}
             message="miaaaaw!!!">
             <Input
-              type="email"
-              name="email"
+              type="text"
+              name="firstname"
               isError={false}
-              id="email"
-              placeholder="Enter your email address"
+              id="firstname"
+              placeholder="Enter your first name"
             />
           </InputComponent>
+          {/* last name */}
           <InputComponent
-            name={"email"}
-            label={"Email Address"}
+            name={"lastname"}
+            label={"Last name"}
             isError={false}
             message="miaaaaw!!!">
             <Input
-              type="email"
-              name="email"
+              type="text"
+              name="lastname"
               isError={false}
-              id="email"
-              placeholder="Enter your email address"
+              id="lastname"
+              placeholder="Enter your Last name"
             />
           </InputComponent>
+          {/* user name */}
           <InputComponent
-            name={"email"}
-            label={"Email Address"}
+            name={"username"}
+            label={"Username"}
             isError={false}
             message="miaaaaw!!!">
             <Input
-              type="email"
-              name="email"
+              type="text"
+              name="username"
               isError={false}
-              id="email"
-              placeholder="Enter your email address"
+              id="username"
+              placeholder="Enter your username"
             />
           </InputComponent>
-          <InputComponent
-            name={"email"}
-            label={"Email Address"}
-            isError={false}
-            message="miaaaaw!!!">
-            <Input
-              type="password"
-              name="email"
-              isError={false}
-              id="email"
-              placeholder="Enter your email address"
-            />
-          </InputComponent>
-          <InputComponent
-            name={"email"}
-            label={"Email Address"}
-            isError={false}
-            message="miaaaaw!!!">
-            <Input
-              type="password"
-              name="email"
-              isError={false}
-              id="email"
-              placeholder="Enter your email address"
-            />
-          </InputComponent>
+          {/* phone number */}
           <InputComponent
             name={"phone"}
-            label={"phone Address"}
+            label={"Phone number"}
             isError={false}
             message="miaaaaw!!!">
             <div className="relative flex items-center">
@@ -113,22 +109,23 @@ export default function Page() {
                 name="phone"
                 isError={false}
                 id="phone"
-                placeholder="Enter your phone address"
+                placeholder="(888) 888-8888"
                 className="ps-[91px]"
               />
             </div>
           </InputComponent>
         </div>
+        <div
+          className={`${styles.container__form__info} bg-info-surface border-l-[6px] border-info-main rounded-[8px]`}>
+          <InfoIcon width={28} height={28} viewBox="0 0 28 28" />
+          <span className="text-[12px] font-normal text-neutral-primary">
+            We'll text a two-factor authentication code to this number when you
+            sign in.
+          </span>
+        </div>
         <Button type="submit">Continue</Button>
         <span className="w-full block h-[1px] bg-neutral-separator"></span>
       </form>
-
-      {/* login page button */}
-      <Link href={"/sign-in"}>
-        <Button type="button" variant={"transparent"} className="text-black">
-          Login
-        </Button>
-      </Link>
     </div>
   );
 }

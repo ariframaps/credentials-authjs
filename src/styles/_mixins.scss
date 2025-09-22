@@ -34,15 +34,15 @@
   }
 }
 
-// =======================
-// TEXT MIXINS
-// =======================
-@mixin text($size: 16px, $weight: 400, $color: #000, $align: left) {
-  font-size: $size;
-  font-weight: $weight;
-  color: $color;
-  text-align: $align;
-}
+// // =======================
+// // TEXT MIXINS
+// // =======================
+// @mixin text($size: 16px, $weight: 400, $color: #000, $align: left) {
+//   font-size: $size;
+//   font-weight: $weight;
+//   color: $color;
+//   text-align: $align;
+// }
 
 // =======================
 // GRID MIXINS

@@ -1,0 +1,28 @@
+@use "@/styles/mixins" as m;
+
+.main {
+  flex: 1;
+  padding-inline: 8%;
+  @include m.center;
+
+  &__container {
+    max-width: 630px;
+    margin-top: -72px;
+    @include m.flex($direction: column, $align: center, $gap: 40);
+
+    &__info {
+      text-align: center;
+      @include m.flex($direction: column, $gap: 12);
+    }
+
+    &__button {
+      width: 100%;
+      padding-inline: 40px;
+      @include m.flex($gap: 12px);
+
+      @include m.media(phone) {
+        flex-direction: column;
+      }
+    }
+  }
+}

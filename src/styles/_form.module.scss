@@ -27,8 +27,11 @@
 
     &__inputs {
       @include m.flex($direction: column, $gap: 24);
-      max-height: 23vw;
       overflow-y: auto;
+      max-height: 30vh;
+
+      @include m.media(laptop) {
+      }
 
       @include m.media(tablet) {
         max-height: 35vw;

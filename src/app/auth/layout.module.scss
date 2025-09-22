@@ -1,5 +1,15 @@
 @use "@/styles/mixins" as m;
 
+.container {
+  @include m.flex($direction: column);
+  height: 100vh;
+
+  @include m.media(phone) {
+    min-height: 100vh;
+    height: fit-content;
+  }
+}
+
 .header {
   padding: 20px 72px;
   @include m.flex($justify: space-between);

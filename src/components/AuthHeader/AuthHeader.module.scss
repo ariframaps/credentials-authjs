@@ -1,0 +1,30 @@
+@use "@/styles/mixins" as m;
+
+.header {
+  padding: 20px 72px;
+  @include m.flex($justify: space-between);
+  @include m.media(tablet) {
+    padding: 20px 48px;
+  }
+  @include m.media(phone) {
+    padding: 20px 30px;
+  }
+  @include m.media(xs) {
+    padding-inline: 5%;
+  }
+
+  &__logo {
+    object-fit: contain;
+  }
+
+  &__info {
+    @include m.flex($gap: 32, $align: center);
+    @include m.media(phone) {
+      gap: 16px;
+    }
+
+    &__languageBtn {
+      @include m.flex($gap: 4);
+    }
+  }
+}

@@ -1,0 +1,12 @@
+@use "@/styles/mixins" as m;
+@use "@/styles/form.module" as *;
+
+.container {
+  &__form {
+    gap: 32px;
+
+    @include m.media(phone) {
+      gap: 18px;
+    }
+  }
+}

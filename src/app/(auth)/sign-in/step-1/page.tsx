@@ -11,7 +11,7 @@ export default function Page() {
       {/* header */}
       <div className={`${styles.container__header}`}>
         <FormHeader
-          title={"Create your partner account"}
+          title={"Sign in to manage your property"}
           subtitle={"Create an account to list and manage your property."}
         />
       </div>
@@ -37,10 +37,10 @@ export default function Page() {
         <span className="w-full block h-[1px] bg-neutral-separator"></span>
       </form>
 
-      {/* login page button */}
-      <Link href={"/sign-in/step-1"}>
+      {/* signup page button */}
+      <Link href={"/sign-up/step-1"}>
         <Button type="button" variant={"transparent"} className="text-black">
-          Login
+          Create your partner account
         </Button>
       </Link>
     </div>

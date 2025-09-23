@@ -5,9 +5,7 @@ import styles from "./layout.module.scss";
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className={`${styles.container} bg-neutral-light`}>
-      <nav className={`${styles.nav}`}>
-        <Sidebar />
-      </nav>
+      <Sidebar />
       <div className={`${styles.content}`}>
         <header className={`${styles.content__header}`}>
           <Header />

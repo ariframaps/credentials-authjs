@@ -1,3 +1,3 @@
 export default function Page() {
-  return <div>dashboard page</div>;
+  return <div className="h-[150vh]">dashboard page</div>;
 }

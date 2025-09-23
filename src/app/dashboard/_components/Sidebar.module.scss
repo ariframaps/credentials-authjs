@@ -2,21 +2,82 @@
 
 .container {
   @include m.flex($direction: column, $justify: start);
-  height: 100%;
+
+  width: 250px;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  transition-duration: 300ms;
+
+  @include m.media(tablet) {
+    width: 60px;
+    overflow: hidden;
+    position: fixed;
+
+    &.open {
+      width: 200px;
+      overflow: visible;
+    }
+  }
 }
 
 .header {
   padding-inline: 24px;
   padding-block: 40px 24px;
   @include m.center;
+
+  @include m.media(tablet) {
+    padding-inline: 16px;
+    padding-block: 24px;
+  }
+
+  &__logoCompact {
+    display: none;
+
+    @include m.media(tablet) {
+      display: block;
+    }
+  }
+
+  &__logoFull {
+    display: block;
+
+    @include m.media(tablet) {
+      display: none;
+    }
+  }
 }
 
 .nav {
+  flex: 1;
+  flex-shrink: 0;
   padding: 24px;
+  height: 100%;
+  @include m.flex($direction: column);
+
+  @include m.media(tablet) {
+    padding: 0px;
+  }
 
   &__item {
     padding-inline: 16px;
     padding-block: 14px;
+    white-space: nowrap;
     @include m.flex($gap: 12, $align: center);
+
+    @include m.media(tablet) {
+      width: 100%;
+      padding-inline: 20px;
+      padding-block: 14px;
+    }
+
+    &:last-child {
+      margin-top: auto;
+      display: none;
+
+      @include m.media(tablet) {
+        @include m.flex($justify: end);
+      }
+    }
   }
 }

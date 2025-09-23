@@ -8,8 +8,10 @@ import ReservationIcon from "@/components/svg/ReservationIcon";
 import BedIcon from "@/components/svg/BedIcon";
 import StarIcon from "@/components/svg/StarIcon";
 import SettingIcon from "@/components/svg/SettingIcon";
-import { Calendar } from "lucide-react";
+import { Calendar, ChevronsRightIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
+import LogoCompact from "@/components/svg/LogoCompact";
+import { useState } from "react";
 
 // all nav link for side bar
 const navItems = [
@@ -47,17 +49,27 @@ const navItems = [
 
 const Sidebar = () => {
   const pathname = usePathname(); // get curretn path
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div
-      className={`${styles.container} border-r-[1px] border-neutral-separator bg-neutral-white`}>
+    <nav
+      className={`${styles.container} ${
+        isOpen ? styles.open : ""
+      } border-r-[1px] border-neutral-separator bg-neutral-white`}>
       <div
         className={`${styles.header} border-b-[1px] border-neutral-separator`}>
+        <LogoCompact
+          width={30}
+          height={30}
+          viewBox="0 0 220 160"
+          className={`${styles.header__logoCompact}`}
+        />
         <Image
           src={"/Logo-black.png"}
           alt="Go For Umrah Logo"
           width={146}
           height={26}
+          className={`${styles.header__logoFull}`}
         />
       </div>
       <ul className={styles.nav}>
@@ -65,11 +77,19 @@ const Sidebar = () => {
           <SidebarLink
             key={item.href}
             {...item}
-            active={pathname === item.href} // ✅ active check
+            active={pathname === item.href}
+            isOpen={isOpen}
           />
         ))}
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className={`${styles.nav__item} cursor-pointer hover:bg-neutral-input`}>
+          <ChevronsRightIcon
+            className={`duration-300 ${isOpen ? "rotate-180" : ""}`}
+          />
+        </button>
       </ul>
-    </div>
+    </nav>
   );
 };
 
@@ -79,11 +99,13 @@ const SidebarLink = ({
   label,
   icon,
   active,
+  isOpen,
 }: {
   href: string;
   label: string;
   icon: React.ReactNode;
   active?: boolean;
+  isOpen: boolean;
 }) => {
   return (
     <Link
@@ -98,7 +120,9 @@ const SidebarLink = ({
         }
       `}>
       {icon}
-      <span>{label}</span>
+      <span className={isOpen ? "tablet:block" : "hidden tablet:block"}>
+        {label}
+      </span>
     </Link>
   );
 };

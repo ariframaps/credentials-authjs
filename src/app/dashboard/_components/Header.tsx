@@ -3,8 +3,22 @@ import styles from "./Header.module.scss";
 import Link from "next/link";
 import BellIcon from "@/components/svg/BellIcon";
 import { Input } from "@/components/ui/input";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import DownArrow from "@/components/svg/DownArrow";
-import { Search } from "lucide-react";
+import { LogOut, Search } from "lucide-react";
 
 const Header = () => {
   return (
@@ -18,17 +32,19 @@ const Header = () => {
             alt={"Hotel"}
             width={48}
             height={48}
-            className="rounded-[4px]"
+            className={`${styles.left__property__img}`}
           />
           <div
             className={`${styles.left__property__details} text-neutral-primary`}>
-            <h3 className="font-semibold text-[18px]">Big Makkah Hotel</h3>
+            <h3 className="font-semibold text-[16px] phone:text-[18px]">
+              Big Makkah Hotel
+            </h3>
             <span className="font-normal text-[14px]">#10292827</span>
           </div>
         </div>
         <Link
           href={"#"}
-          className="text-[16px] font-semibold duration-150 text-brand-green-color-01 hover:text-green-700  ">
+          className="tablet:text-[16px] text-[14px] tablet:font-semibold font-medium duration-150 text-brand-green-color-01 hover:text-green-700  ">
           See your property
         </Link>
       </div>
@@ -55,23 +71,51 @@ const Header = () => {
             className="text-brand-blue_whale-color-01"
           />
         </div>
-        <div className={`${styles.right__userDetails}`}>
-          <Image
-            src={"/Avatar.png"}
-            alt={"User profile image"}
-            width={32}
-            height={32}
-          />
-          <span className="font-semibold text-[14px] text-neutral-primary">
-            John doe
-          </span>
-          <DownArrow
-            width={20}
-            height={20}
-            viewBox="0 0 20 20"
-            className="text-neutral-secondary"
-          />
-        </div>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button
+              type="button"
+              className={`${styles.right__userDetails} duration-200 cursor-pointer rounded-[10px] hover:bg-neutral-light`}>
+              <Image
+                src={"/Avatar.png"}
+                alt={"User profile image"}
+                width={32}
+                height={32}
+              />
+              <span className="font-semibold text-[14px] text-neutral-primary">
+                John doe
+              </span>
+              <DownArrow
+                width={20}
+                height={20}
+                viewBox="0 0 20 20"
+                className="text-neutral-secondary"
+              />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-40" align="end">
+            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuGroup>
+              <DropdownMenuItem>
+                <span
+                  className={`${styles.nav__item} duration-200 flex items-center gap-2 rounded-[8px] text-[14px] font-normal text-neutral-primary`}>
+                  Username
+                </span>
+              </DropdownMenuItem>
+              <DropdownMenuItem>+6281335618823</DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <DropdownMenuItem>
+                Log out
+                <DropdownMenuShortcut>
+                  <LogOut />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
   );

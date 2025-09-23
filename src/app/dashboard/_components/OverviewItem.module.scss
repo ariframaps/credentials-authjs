@@ -1,0 +1,74 @@
+@use "@/styles/mixins" as m;
+
+.container {
+  @include m.flex($justify: space-between, $align: start, $gap: 16);
+  padding-block: 24px;
+  padding-inline: 24px 32px;
+  max-width: 1400px;
+
+  @include m.media(phone) {
+    gap: 10px;
+    padding: 10px !important;
+  }
+
+  * {
+    flex-shrink: 0;
+  }
+
+  &__detail1 {
+    @include m.flex($direction: column, $gap: 8px, $justify: start);
+
+    @include m.media(phone) {
+      gap: 4px;
+    }
+
+    &__info {
+      @include m.flex($justify: space-between, $gap: 12px, $align: center);
+
+      &__divider {
+        width: 5px;
+        height: 5px;
+        border-radius: 100%;
+        background-color: #f1f3f5;
+
+        @include m.media(tablet) {
+          display: none !important;
+        }
+      }
+
+      & > * {
+        @include m.flex($align: center, $gap: 12px);
+      }
+
+      @include m.media(tablet) {
+        & :first-child {
+          display: none;
+        }
+      }
+    }
+  }
+
+  &__detail2 {
+    @include m.media(tablet) {
+      display: none !important;
+    }
+  }
+
+  &__detail3 {
+    @include m.flex($direction: column, $gap: 12px, $justify: start);
+
+    @include m.media(phone) {
+      display: none !important;
+    }
+
+    & > div {
+      @include m.flex($gap: 12px, $justify: start, $align: center);
+    }
+  }
+
+  &__detail4 {
+    @include m.media(tablet) {
+      display: none !important;
+    }
+  }
+}

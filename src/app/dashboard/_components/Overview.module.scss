@@ -1,0 +1,11 @@
+@use "@/styles/mixins" as m;
+
+.container {
+  min-height: 30vh;
+  padding: 24px;
+
+  @include m.media(phone) {
+    padding-inline: 5%;
+    padding-block: 14px;
+  }
+}

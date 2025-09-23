@@ -3,16 +3,25 @@
 .container {
   padding: 24px;
   @include m.flex($direction: column, $gap: 24px);
+
+  @include m.media(phone) {
+    padding-inline: 5%;
+    gap: 16px;
+  }
 }
 
 .content {
-  @include m.flex($direction: column);
+  @include m.flex($direction: column, $gap: 24px);
+
+  @include m.media(phone) {
+    gap: 16px;
+  }
 
   &__header {
     @include m.flex($justify: space-between, $align: center);
 
     & button {
-      width: 148px;
+      width: fit-content;
     }
   }
 }

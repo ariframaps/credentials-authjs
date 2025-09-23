@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import DownArrow from "@/components/svg/DownArrow";
 import { LogOut, Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const Header = () => {
   return (
@@ -40,8 +41,11 @@ const Header = () => {
         </div>
         <Link
           href={"#"}
-          className="tablet:text-[16px] text-[14px] phone:font-semibold font-medium duration-150 text-brand-green-color-01 hover:text-green-700  ">
-          See your property
+          // className="tablet:text-[16px] text-[14px] phone:font-semibold font-medium duration-150 text-brand-green-color-01 hover:text-green-700  "
+        >
+          <Button variant={"noborder"} className="p-0">
+            See your property
+          </Button>
         </Link>
       </div>
 
@@ -59,13 +63,14 @@ const Header = () => {
             className="rounded-[10px] text-[14px] font-normal ps-[42px] "
           />
         </div>
-        <div className={`${styles.right__notification}`}>
+        <div className={`${styles.right__notification} relative`}>
           <BellIcon
             width={24}
             height={24}
             viewBox="0 0 24 24"
             className="text-brand-blue_whale-color-01"
           />
+          <div className="absolute top-0 right-0 w-[10px] h-[10px] bg-text-danger-tertiary rounded-full border-2 border-neutral-white "></div>
         </div>
 
         <DropdownMenu>

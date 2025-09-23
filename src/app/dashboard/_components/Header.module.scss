@@ -1,6 +1,8 @@
 @use "@/styles/mixins" as m;
 
 .container {
+  position: sticky;
+  top: 0;
   height: fit-content;
   padding-inline: 24px;
   padding-block: 24px 16px;

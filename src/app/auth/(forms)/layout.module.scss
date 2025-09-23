@@ -2,7 +2,7 @@
 
 .container {
   @include m.flex($justify: center);
-  height: 100%;
+  min-height: 90vh;
   width: 100%;
 
   &__left {
@@ -11,6 +11,7 @@
     margin-inline: 120px 72px;
     margin-block: 96px 32px;
     gap: 64px;
+    min-height: 100%;
 
     @include m.media(tablet) {
       margin-inline: 72px 40px;

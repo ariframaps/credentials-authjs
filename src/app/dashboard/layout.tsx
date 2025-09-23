@@ -7,9 +7,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <div className={`${styles.container} bg-neutral-light`}>
       <Sidebar />
       <div className={`${styles.content}`}>
-        <header className={`${styles.content__header}`}>
-          <Header />
-        </header>
+        <Header />
         <main className={`${styles.content__main}`}>{children}</main>
       </div>
     </div>

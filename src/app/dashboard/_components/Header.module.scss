@@ -1,6 +1,7 @@
 @use "@/styles/mixins" as m;
 
 .container {
+  height: fit-content;
   padding-inline: 24px;
   padding-block: 24px 16px;
   @include m.flex($justify: space-between, $align: center, $gap: 12px);
@@ -14,7 +15,7 @@
 .left {
   flex-shrink: 0;
   @include m.flex($justify: space-between, $align: center, $gap: 20);
-  @include m.media(tablet) {
+  @include m.media(phone) {
     gap: 0;
     flex-direction: column;
     align-items: start;
@@ -23,7 +24,7 @@
   &__property {
     @include m.flex($justify: space-between, $align: center, $gap: 8);
 
-    @include m.media(tablet) {
+    @include m.media(phone) {
       &__img {
         display: none;
       }
@@ -32,7 +33,7 @@
     &__details {
       @include m.flex($direction: column, $justify: space-between);
 
-      @include m.media(tablet) {
+      @include m.media(phone) {
         > :last-child {
           display: none;
         }

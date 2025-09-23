@@ -9,12 +9,8 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuPortal,
   DropdownMenuSeparator,
   DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import DownArrow from "@/components/svg/DownArrow";
@@ -22,7 +18,7 @@ import { LogOut, Search } from "lucide-react";
 
 const Header = () => {
   return (
-    <div
+    <header
       className={`${styles.container} bg-blend-color bg-neutral-white border-b-[1px] border-b-neutral-separator`}>
       {/* hotel */}
       <div className={`${styles.left}`}>
@@ -44,7 +40,7 @@ const Header = () => {
         </div>
         <Link
           href={"#"}
-          className="tablet:text-[16px] text-[14px] tablet:font-semibold font-medium duration-150 text-brand-green-color-01 hover:text-green-700  ">
+          className="tablet:text-[16px] text-[14px] phone:font-semibold font-medium duration-150 text-brand-green-color-01 hover:text-green-700  ">
           See your property
         </Link>
       </div>
@@ -117,7 +113,7 @@ const Header = () => {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-    </div>
+    </header>
   );
 };
 

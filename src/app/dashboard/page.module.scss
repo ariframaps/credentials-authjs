@@ -1,0 +1,18 @@
+@use "@/styles/mixins" as m;
+
+.container {
+  padding: 24px;
+  @include m.flex($direction: column, $gap: 24px);
+}
+
+.content {
+  @include m.flex($direction: column);
+
+  &__header {
+    @include m.flex($justify: space-between, $align: center);
+
+    & button {
+      width: 148px;
+    }
+  }
+}

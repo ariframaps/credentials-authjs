@@ -1,10 +1,15 @@
+"use client";
+
 import Image from "next/image";
 import styles from "@/styles/_infopage.module.scss";
 import { Button } from "@/components/ui/button";
+import { useSignUpStore } from "../../_stores/signupStore";
 
 export default function Page() {
+  const formData = useSignUpStore((state) => state.formData);
+
   return (
-    <main className={`${styles.main}`}>
+    <div className={`${styles.main}`}>
       <section className={`${styles.main__container}`}>
         <Image
           src={"/CheckCircle.png"}
@@ -18,8 +23,8 @@ export default function Page() {
           </h1>
           <p className="text-[16px] font-normal text-neutral-secondary">
             We sent you an email with a verification link to{" "}
-            <span className="font-semibold">fahmiauliyarohman@gmail.com</span>.
-            To confirm your account please follow the link in the email we just
+            <span className="font-semibold">{formData.email || ""}</span>. To
+            confirm your account please follow the link in the email we just
             sent.
           </p>
         </div>
@@ -27,6 +32,6 @@ export default function Page() {
           <Button>Open your email</Button>
         </div>
       </section>
-    </main>
+    </div>
   );
 }

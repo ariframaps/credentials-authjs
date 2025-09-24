@@ -1,8 +1,19 @@
+"use client";
 import Image from "next/image";
 import styles from "@/styles/_infopage.module.scss";
 import { Button } from "@/components/ui/button";
+import { useSignInStore } from "../../_stores/signinStore";
+import { useEffect, useState } from "react";
+import { censorEmail } from "@/lib/cencorEmail";
 
 export default function Page() {
+  const formData = useSignInStore((state) => state.formData);
+  const [email, setEmail] = useState("");
+
+  useEffect(() => {
+    setEmail(censorEmail(formData.email || ""));
+  }, [formData]);
+
   return (
     <main className={`${styles.main}`}>
       <section className={`${styles.main__container}`}>
@@ -17,9 +28,9 @@ export default function Page() {
             Check your inbox
           </h1>
           <p className="text-[16px] font-normal text-neutral-secondary">
-            We just emailed instructions and a reset password link to
-            <span className="font-semibold">f***********@g*****.com</span>. It
-            might take a few minutes to arrive.
+            We just emailed instructions and a reset password link to{" "}
+            <span className="font-semibold">{email}</span>. It might take a few
+            minutes to arrive.
           </p>
         </div>
         <div className={`${styles.main__container__button}`}>

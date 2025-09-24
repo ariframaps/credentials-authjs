@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import styles from "./page.module.scss";
 import { Input } from "@/components/ui/input";
@@ -5,13 +7,48 @@ import { InputComponent } from "@/components/InputComponent";
 import FormHeader from "@/components/FormHeader";
 import Link from "next/link";
 import LeftArrow from "@/components/svg/LeftArrow";
+import { FormsSchema } from "@/types/formsSchema";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useSignInStore } from "../../_stores/signinStore";
+import { useEffect } from "react";
+
+const resetPasswordSchema = FormsSchema.pick({
+  email: true,
+});
+
+type ResetPasswordType = z.infer<typeof resetPasswordSchema>;
 
 export default function Page() {
+  const router = useRouter();
+  const formData = useSignInStore((state) => state.formData);
+
+  const form = useForm<ResetPasswordType>({
+    resolver: zodResolver(resetPasswordSchema),
+  });
+
+  const onSubmit = (data: ResetPasswordType) => {
+    console.log(data);
+
+    // send reset password link to the email
+
+    // if error, show error message
+
+    // if success, show success page
+    router.push("/auth/request-reset-password-sent");
+  };
+
+  useEffect(() => {
+    form.setValue("email", formData.email || "");
+  }, [formData.email]);
+
   return (
     <div className={`${styles.container}`}>
       {/* back to previous step button */}
       <Link
-        href={"/sign-in/step-2"}
+        href={"/auth/sign-in/step-2"}
         className={`${styles.container__backBtn} text-neutral-primary font-semibold text-[18px]`}>
         <LeftArrow
           className="text-brand-green-color-01"
@@ -33,17 +70,20 @@ export default function Page() {
       </div>
 
       {/* form */}
-      <form className={`${styles.container__form}`}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className={`${styles.container__form}`}>
         <div className={`${styles.container__form__inputs}`}>
           <InputComponent
             name={"email"}
             label={"Email Address"}
-            isError={false}
-            message="miaaaaw!!!">
+            isError={form.formState.errors.email ? true : false}
+            message={form.formState.errors.email?.message}>
             <Input
-              type="email"
+              {...form.register("email")}
+              type="text"
               name="email"
-              isError={false}
+              isError={form.formState.errors.email ? true : false}
               id="email"
               placeholder="Enter your email address"
             />

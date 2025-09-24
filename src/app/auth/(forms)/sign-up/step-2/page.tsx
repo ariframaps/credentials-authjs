@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import styles from "./page.module.scss";
 import { Input } from "@/components/ui/input";
@@ -13,14 +15,115 @@ import FormHeader from "@/components/FormHeader";
 import Link from "next/link";
 import LeftArrow from "@/components/svg/LeftArrow";
 import InfoIcon from "@/components/svg/InfoIcon";
+import { FormsSchema } from "@/types/formsSchema";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useSignUpStore } from "@/app/auth/_stores/signupStore";
+import { resendVerifyEmailRequest } from "@/lib/services/apiRequests";
+
+const signUpStep2Schema = FormsSchema.pick({
+  firstname: true,
+  lastname: true,
+  username: true,
+  phone: true,
+});
+
+type SignUpStep2Type = z.infer<typeof signUpStep2Schema>;
 
 export default function Page() {
+  const router = useRouter();
+  const [countryCode, setCountryCode] = useState<string>("");
+  const userStepState = useSignUpStore((state) => state.step);
+  const formData = useSignUpStore((state) => state.formData);
+  const setFormData = useSignUpStore((state) => state.setFormData);
+  const nextStep = useSignUpStore((state) => state.nextStep);
+  const goToStep = useSignUpStore((state) => state.goToStep);
+  const form = useForm<SignUpStep2Type>({
+    resolver: zodResolver(signUpStep2Schema),
+  });
+
+  // check is user is already logged in, if yes redirect to dashboard
+
+  const onSubmit = async (data: SignUpStep2Type) => {
+    try {
+      if (!countryCode) {
+        form.setError("phone", {
+          type: "manual",
+          message: "Country code is required",
+        });
+        return;
+      }
+
+      // check useername if already exists
+      const checkEmail = await resendVerifyEmailRequest({
+        email: data.username,
+      });
+
+      // if exists, show error message
+      if (checkEmail.success == true) {
+        form.setError("username", {
+          type: "manual",
+          message: "Username already taken",
+        });
+        return;
+      } else if (checkEmail.success == false) {
+        if (
+          checkEmail.errors ===
+          "Can't resend email code, because account was verified."
+        ) {
+          form.setError("username", {
+            type: "manual",
+            message: "Username already taken",
+          });
+          return;
+        }
+      }
+
+      // save data to signup state
+      setFormData({
+        firstname: data.firstname,
+        lastname: data.lastname,
+        username: data.username,
+        phone: data.phone,
+        countryCode: countryCode,
+      });
+      // set step state to 3
+      if (userStepState === 2) {
+        nextStep();
+      }
+      // // redirect to step 3
+      router.push("/auth/sign-up/step-3");
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    if (userStepState == 0) {
+      goToStep(1);
+      return;
+    }
+
+    if (userStepState < 2) {
+      router.replace(`/auth/sign-up/step-${userStepState}`);
+      return;
+    }
+    form.reset({
+      firstname: formData.firstname || "",
+      lastname: formData.lastname || "",
+      username: formData.username || "",
+      phone: formData.phone || "",
+    });
+    setCountryCode(formData.countryCode || "");
+  }, [userStepState, form, formData, router]);
+
   return (
     <div className={`${styles.container}`}>
       {/* back to previous step button */}
 
       <Link
-        href={"/sign-up/step-1"}
+        href={"/auth/sign-up/step-1"}
         className={`${styles.container__backBtn} text-neutral-primary font-semibold text-[18px]`}>
         <LeftArrow
           className="text-brand-green-color-01"
@@ -42,32 +145,36 @@ export default function Page() {
       </div>
 
       {/* form */}
-      <form className={`${styles.container__form}`}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className={`${styles.container__form}`}>
         <div className={`${styles.container__form__inputs}`}>
           {/* first name */}
           <InputComponent
-            name={"firstname"}
+            name={"firstName"}
             label={"First name"}
-            isError={false}
-            message="miaaaaw!!!">
+            isError={form.formState.errors.firstname ? true : false}
+            message={form.formState.errors.firstname?.message}>
             <Input
+              {...form.register("firstname")}
               type="text"
               name="firstname"
-              isError={false}
+              isError={form.formState.errors.firstname ? true : false}
               id="firstname"
               placeholder="Enter your first name"
             />
           </InputComponent>
           {/* last name */}
           <InputComponent
-            name={"lastname"}
+            name={"lastName"}
             label={"Last name"}
-            isError={false}
-            message="miaaaaw!!!">
+            isError={form.formState.errors.lastname ? true : false}
+            message={form.formState.errors.lastname?.message}>
             <Input
+              {...form.register("lastname")}
               type="text"
               name="lastname"
-              isError={false}
+              isError={form.formState.errors.lastname ? true : false}
               id="lastname"
               placeholder="Enter your Last name"
             />
@@ -76,12 +183,13 @@ export default function Page() {
           <InputComponent
             name={"username"}
             label={"Username"}
-            isError={false}
-            message="miaaaaw!!!">
+            isError={form.formState.errors.username ? true : false}
+            message={form.formState.errors.username?.message}>
             <Input
+              {...form.register("username")}
               type="text"
               name="username"
-              isError={false}
+              isError={form.formState.errors.username ? true : false}
               id="username"
               placeholder="Enter your username"
             />
@@ -90,10 +198,12 @@ export default function Page() {
           <InputComponent
             name={"phone"}
             label={"Phone number"}
-            isError={false}
-            message="miaaaaw!!!">
+            isError={form.formState.errors.phone ? true : false}
+            message={form.formState.errors.phone?.message}>
             <div className="relative flex items-center">
-              <Select>
+              <Select
+                onValueChange={setCountryCode}
+                defaultValue={formData.countryCode || undefined}>
                 <SelectTrigger className="absolute px-[16px] border-r-[1px] border-neutral-input rounded-none min-w-[75px]">
                   <SelectValue placeholder="+1" />
                 </SelectTrigger>
@@ -105,9 +215,10 @@ export default function Page() {
                 </SelectContent>
               </Select>
               <Input
+                {...form.register("phone")}
                 type="tel"
                 name="phone"
-                isError={false}
+                isError={form.formState.errors.phone ? true : false}
                 id="phone"
                 placeholder="(888) 888-8888"
                 className="ps-[91px]"

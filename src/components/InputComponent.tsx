@@ -11,7 +11,7 @@ interface Props {
 export const InputComponent = (props: Props) => {
   return (
     <div className={`flex flex-col gap-[8px]`}>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center justify-between gap-2 pe-1.5">
         <label
           className={`${
             props.isError
@@ -21,19 +21,21 @@ export const InputComponent = (props: Props) => {
           htmlFor={props.name}>
           {props.label}
         </label>
+        {/* {props.isError && (
+        )} */}
         {props.isError && (
-          <InfoIcon
-            width={15}
-            height={15}
-            viewBox="0 0 28 28"
-            className="text-text-danger-tertiary"
-          />
+          <div className="flex items-center gap-1">
+            <InfoIcon
+              width={15}
+              height={15}
+              viewBox="0 0 28 28"
+              className="text-text-danger-tertiary"
+            />
+            <span className="text-text-danger-tertiary">{props.message}</span>
+          </div>
         )}
       </div>
       {props.children}
-      {props.isError && (
-        <span className="text-text-danger-tertiary">{props.message}</span>
-      )}
     </div>
   );
 };

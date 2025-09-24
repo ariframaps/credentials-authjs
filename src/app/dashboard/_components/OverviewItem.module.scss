@@ -1,13 +1,25 @@
 @use "@/styles/mixins" as m;
 
 .container {
-  @include m.flex($justify: space-between, $align: start, $gap: 16);
   padding-block: 24px;
   padding-inline: 24px 32px;
-  max-width: 1400px;
+  display: grid;
+  grid-template-columns: 50px 2fr 1fr 2fr 1fr 1.5fr;
+  gap: 16px;
+
+  @include m.media(desktop) {
+    grid-template-columns: 50px 2.5fr 1.5fr 1.5fr 1fr 1fr;
+  }
+  @include m.media(laptop) {
+    grid-template-columns: 50px 2fr 1.5fr 1fr;
+  }
+  @include m.media(tablet) {
+    grid-template-columns: 50px 2fr 2fr 1fr;
+  }
 
   @include m.media(phone) {
     gap: 10px;
+    grid-template-columns: 50px 2fr max-content;
     padding: 10px !important;
   }
 
@@ -15,11 +27,17 @@
     flex-shrink: 0;
   }
 
+  > :last-child {
+    justify-self: end;
+  }
+
   &__detail1 {
+    width: min-content;
     @include m.flex($direction: column, $gap: 8px, $justify: start);
 
-    @include m.media(phone) {
+    @include m.media(tablet) {
       gap: 4px;
+      width: max-content;
     }
 
     &__info {
@@ -31,7 +49,7 @@
         border-radius: 100%;
         background-color: #f1f3f5;
 
-        @include m.media(tablet) {
+        @include m.media(laptop) {
           display: none !important;
         }
       }
@@ -49,7 +67,8 @@
   }
 
   &__detail2 {
-    @include m.media(tablet) {
+    padding-inline: 10px;
+    @include m.media(laptop) {
       display: none !important;
     }
   }
@@ -67,7 +86,7 @@
   }
 
   &__detail4 {
-    @include m.media(tablet) {
+    @include m.media(laptop) {
       display: none !important;
     }
   }

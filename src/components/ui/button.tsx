@@ -5,16 +5,16 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "w-full rounded-[10px] border-[2px] border-brand-green-color-01 duration-150 text-[14px] font-semibold",
+  "w-full rounded-[10px] border-[2px] border-brand-green-color-01 duration-150 text-[14px] font-semibold ",
   {
     variants: {
       variant: {
         default:
-          "bg-brand-green-color-01 text-primary-foreground hover:bg-green-700",
+          "bg-brand-green-color-01 text-primary-foreground hover:bg-green-700 disabled:bg-[#8BC3B4] disabled:cursor-not-allowed",
         transparent:
           "bg-transparent text-neutral-primary hover:bg-neutral-input",
         noborder:
-          "border-none tablet:text-[16px] text-[14px] phone:font-semibold font-medium duration-150 text-brand-green-color-01 hover:text-green-700  ",
+          "border-none tablet:text-[16px] text-[14px] phone:font-semibold font-medium duration-150 text-brand-green-color-01 hover:text-green-700 disabled:cursor-not-allowed",
       },
       size: {
         default: "p-[13px]",

@@ -21,8 +21,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useSignUpStore } from "@/app/auth/_stores/signupStore";
+import { useSignUpStore } from "@/lib/stores/signupStore";
 import { resendVerifyEmailRequest } from "@/lib/services/apiRequests";
+import LoadingComponent from "@/components/LoadingComponent";
 
 const signUpStep2Schema = FormsSchema.pick({
   firstname: true,
@@ -35,80 +36,70 @@ type SignUpStep2Type = z.infer<typeof signUpStep2Schema>;
 
 export default function Page() {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [countryCode, setCountryCode] = useState<string>("");
   const userStepState = useSignUpStore((state) => state.step);
   const formData = useSignUpStore((state) => state.formData);
   const setFormData = useSignUpStore((state) => state.setFormData);
   const nextStep = useSignUpStore((state) => state.nextStep);
-  const goToStep = useSignUpStore((state) => state.goToStep);
   const form = useForm<SignUpStep2Type>({
     resolver: zodResolver(signUpStep2Schema),
   });
 
-  // check is user is already logged in, if yes redirect to dashboard
-
   const onSubmit = async (data: SignUpStep2Type) => {
-    try {
-      if (!countryCode) {
-        form.setError("phone", {
-          type: "manual",
-          message: "Country code is required",
-        });
-        return;
-      }
-
-      // check useername if already exists
-      const checkEmail = await resendVerifyEmailRequest({
-        email: data.username,
+    if (!countryCode) {
+      form.setError("phone", {
+        type: "manual",
+        message: "Country code is required",
       });
+      return;
+    }
 
-      // if exists, show error message
-      if (checkEmail.success == true) {
+    setIsLoading(true);
+    // check useername if already exists
+    const checkEmail = await resendVerifyEmailRequest({
+      email: data.username,
+    });
+
+    // if exists, show error message
+    if (checkEmail.success == true) {
+      form.setError("username", {
+        type: "manual",
+        message: "Username already taken",
+      });
+      setIsLoading(false);
+      return;
+    } else if (checkEmail.success == false) {
+      if (
+        checkEmail.errors ===
+        "Can't resend email code, because account was verified."
+      ) {
         form.setError("username", {
           type: "manual",
           message: "Username already taken",
         });
+        setIsLoading(false);
         return;
-      } else if (checkEmail.success == false) {
-        if (
-          checkEmail.errors ===
-          "Can't resend email code, because account was verified."
-        ) {
-          form.setError("username", {
-            type: "manual",
-            message: "Username already taken",
-          });
-          return;
-        }
       }
+    }
 
-      // save data to signup state
-      setFormData({
-        firstname: data.firstname,
-        lastname: data.lastname,
-        username: data.username,
-        phone: data.phone,
-        countryCode: countryCode,
-      });
-      // set step state to 3
-      if (userStepState === 2) {
-        nextStep();
-      }
-      // // redirect to step 3
-      router.push("/auth/sign-up/step-3");
-    } catch (error) {}
+    // save data to signup state
+    setFormData({
+      firstname: data.firstname,
+      lastname: data.lastname,
+      username: data.username,
+      phone: data.phone,
+      countryCode: countryCode,
+    });
+    // set step state to 3
+    if (userStepState === 2) {
+      nextStep();
+    }
+    // // redirect to step 3
+    router.push("/auth/sign-up/step-3");
   };
 
   useEffect(() => {
-    if (userStepState == 0) {
-      goToStep(1);
-      return;
-    }
-
-    if (userStepState < 2) {
-      router.replace(`/auth/sign-up/step-${userStepState}`);
-      return;
-    }
     form.reset({
       firstname: formData.firstname || "",
       lastname: formData.lastname || "",
@@ -116,7 +107,7 @@ export default function Page() {
       phone: formData.phone || "",
     });
     setCountryCode(formData.countryCode || "");
-  }, [userStepState, form, formData, router]);
+  }, [form, formData]);
 
   return (
     <div className={`${styles.container}`}>
@@ -230,11 +221,13 @@ export default function Page() {
           className={`${styles.container__form__info} bg-info-surface border-l-[6px] border-info-main rounded-[8px]`}>
           <InfoIcon width={28} height={28} viewBox="0 0 28 28" />
           <span className="text-[12px] font-normal text-neutral-primary">
-            We'll text a two-factor authentication code to this number when you
-            sign in.
+            {`We'll text a two-factor authentication code to this number when you
+            sign in.`}
           </span>
         </div>
-        <Button type="submit">Continue</Button>
+        <Button type="submit" disabled={isLoading}>
+          {isLoading ? <LoadingComponent size={20} /> : "Continue"}
+        </Button>
         <span className="w-full block h-[1px] bg-neutral-separator"></span>
       </form>
     </div>

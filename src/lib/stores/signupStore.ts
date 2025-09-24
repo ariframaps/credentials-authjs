@@ -12,11 +12,9 @@ const signupStateSchema = FormsSchema.pick({
   countryCode: true,
 });
 
-type SignUpStateType = Partial<z.infer<typeof signupStateSchema>>;
-
 interface SignUpState {
   step: number;
-  formData: SignUpStateType;
+  formData: Partial<z.infer<typeof signupStateSchema>>;
   // mutations
   nextStep: () => void;
   goToStep: (step: number) => void;
@@ -27,7 +25,7 @@ interface SignUpState {
 export const useSignUpStore = create<SignUpState>()(
   persist(
     (set) => ({
-      step: 0,
+      step: 1,
       formData: {},
       nextStep: () => set((state) => ({ step: state.step + 1 })),
       goToStep: (step) => set({ step }),

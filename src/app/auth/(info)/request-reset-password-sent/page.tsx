@@ -2,9 +2,10 @@
 import Image from "next/image";
 import styles from "@/styles/_infopage.module.scss";
 import { Button } from "@/components/ui/button";
-import { useSignInStore } from "../../_stores/signinStore";
+import { useSignInStore } from "../../../../lib/stores/signinStore";
 import { useEffect, useState } from "react";
 import { censorEmail } from "@/lib/cencorEmail";
+import Link from "next/link";
 
 export default function Page() {
   const formData = useSignInStore((state) => state.formData);
@@ -34,7 +35,11 @@ export default function Page() {
           </p>
         </div>
         <div className={`${styles.main__container__button}`}>
-          <Button>Open your email</Button>
+          <Link
+            href={"/auth/request-reset-password-sent/submit"}
+            className="w-full">
+            <Button>Open your email</Button>
+          </Link>
         </div>
       </section>
     </main>

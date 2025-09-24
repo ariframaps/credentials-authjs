@@ -12,62 +12,68 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useEffect } from "react";
-import { useSignUpStore } from "@/app/auth/_stores/signupStore";
+import { useState } from "react";
+import { useSignUpStore } from "@/lib/stores/signupStore";
+import { createAccount } from "@/lib/actions/authActions";
+import { signUpRequestBody } from "@/lib/services/apiRequests";
+import { XCircleIcon } from "lucide-react";
+import LoadingComponent from "@/components/LoadingComponent";
 
 const signUpStep3Schema = FormsSchema.pick({
   password: true,
   confirmPassword: true,
 });
-
 type SignUpStep3Type = z.infer<typeof signUpStep3Schema>;
 
 export default function Page() {
   const router = useRouter();
-  const userStepState = useSignUpStore((state) => state.step);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const formData = useSignUpStore((state) => state.formData);
-  const resetState = useSignUpStore((state) => state.reset);
-  const goToStep = useSignUpStore((state) => state.goToStep);
   const form = useForm<SignUpStep3Type>({
     resolver: zodResolver(signUpStep3Schema),
   });
 
-  const onSubmit = (data: SignUpStep3Type) => {
-    try {
-      // check if password and confirm password match
-      if (data.password !== data.confirmPassword) {
-        throw new Error("Passwords do not match");
-      }
-      // submit the form data to the server
-      const allSignupData = {
-        ...formData,
-        phone: `${formData.countryCode}${formData.phone}`,
-        password: data.password,
-      };
+  const onSubmit = async (data: SignUpStep3Type) => {
+    setIsLoading(false);
+    // if something empty then go back
+    if (
+      !formData.email ||
+      !formData.username ||
+      !formData.firstname ||
+      !formData.lastname ||
+      !formData.phone
+    ) {
+      form.setError("root", {
+        type: "manual",
+        message: "All fields need to be filled first!",
+      });
+      setIsLoading(true);
+      setTimeout(() => {
+        router.replace("/auth/sign-up/step-1");
+      }, 3000);
+      return;
+    }
 
-      // if successful, redirect to the verify page
-      router.push("/auth/verify-account");
-      resetState();
-    } catch (error) {
+    // check if password and confirm password match
+    if (data.password !== data.confirmPassword) {
       form.setError("confirmPassword", {
         type: "manual",
-        message: (error as any).message,
+        message: "password doesnt match with confirm password",
       });
-      return;
     }
-  };
+    // submit the form data to the server
+    const allSignupData = {
+      ...formData,
+      phone: `${formData.countryCode}${formData.phone}`,
+      password: data.password,
+    };
 
-  // redirect inside useEffect
-  useEffect(() => {
-    if (userStepState == 0) {
-      goToStep(1);
-      return;
-    }
-    if (userStepState < 3) {
-      router.replace(`/auth/sign-up/step-${userStepState}`);
-      return;
-    }
-  }, [userStepState, router]);
+    setIsLoading(true);
+    await createAccount(allSignupData as z.infer<typeof signUpRequestBody>);
+
+    // if successful, redirect to the verify page
+    router.push("/auth/verify-account");
+  };
 
   return (
     <div className={`${styles.container}`}>
@@ -131,7 +137,30 @@ export default function Page() {
             />
           </InputComponent>
         </div>
-        <Button type="submit">Create Account</Button>
+        {form.formState.errors.root && (
+          <div
+            className={`${styles.container__form__info} bg-red-50 border-l-[6px] border-text-danger-tertiary rounded-[8px]`}>
+            <XCircleIcon
+              width={28}
+              height={28}
+              className="text-text-danger-tertiary"
+            />
+            <span className="text-[12px] font-normal text-red-800">
+              {form.formState.errors.root?.message}
+            </span>
+          </div>
+        )}
+        <Button disabled={isLoading} type="submit">
+          {isLoading ? (
+            form.formState.errors.root ? (
+              "Redirecting.."
+            ) : (
+              <LoadingComponent size={20} />
+            )
+          ) : (
+            "Create account"
+          )}
+        </Button>
         <span className="w-full block h-[1px] bg-neutral-separator"></span>
       </form>
     </div>

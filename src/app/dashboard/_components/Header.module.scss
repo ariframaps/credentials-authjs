@@ -84,12 +84,5 @@
 
   &__userDetails {
     flex-shrink: 0;
-    white-space: nowrap;
-    @include m.flex($justify: space-between, $align: center, $gap: 12);
-    @include m.media(laptop) {
-      > *:not(:first-child) {
-        display: none;
-      }
-    }
   }
 }

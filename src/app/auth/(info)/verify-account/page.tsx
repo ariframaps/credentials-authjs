@@ -3,7 +3,8 @@
 import Image from "next/image";
 import styles from "@/styles/_infopage.module.scss";
 import { Button } from "@/components/ui/button";
-import { useSignUpStore } from "../../_stores/signupStore";
+import { useSignUpStore } from "../../../../lib/stores/signupStore";
+import Link from "next/link";
 
 export default function Page() {
   const formData = useSignUpStore((state) => state.formData);
@@ -29,7 +30,9 @@ export default function Page() {
           </p>
         </div>
         <div className={`${styles.main__container__button}`}>
-          <Button>Open your email</Button>
+          <Link href={"/auth/verify-account/submit"} className="w-full">
+            <Button>Open your email</Button>
+          </Link>
         </div>
       </section>
     </div>

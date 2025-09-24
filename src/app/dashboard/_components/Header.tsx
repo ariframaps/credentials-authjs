@@ -3,19 +3,9 @@ import styles from "./Header.module.scss";
 import Link from "next/link";
 import BellIcon from "@/components/svg/BellIcon";
 import { Input } from "@/components/ui/input";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import DownArrow from "@/components/svg/DownArrow";
-import { LogOut, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import HeaderUserInfo from "./HeaderUserInfo";
 
 const Header = () => {
   return (
@@ -73,50 +63,9 @@ const Header = () => {
           <div className="absolute top-0 right-0 w-[10px] h-[10px] bg-text-danger-tertiary rounded-full border-2 border-neutral-white "></div>
         </div>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button
-              type="button"
-              className={`${styles.right__userDetails} duration-200 cursor-pointer rounded-[10px] hover:bg-neutral-light`}>
-              <Image
-                src={"/Avatar.png"}
-                alt={"User profile image"}
-                width={32}
-                height={32}
-              />
-              <span className="font-semibold text-[14px] text-neutral-primary">
-                John doe
-              </span>
-              <DownArrow
-                width={20}
-                height={20}
-                viewBox="0 0 20 20"
-                className="text-neutral-secondary"
-              />
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-40" align="end">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <span
-                  className={`${styles.nav__item} duration-200 flex items-center gap-2 rounded-[8px] text-[14px] font-normal text-neutral-primary`}>
-                  Username
-                </span>
-              </DropdownMenuItem>
-              <DropdownMenuItem>+6281335618823</DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                Log out
-                <DropdownMenuShortcut>
-                  <LogOut />
-                </DropdownMenuShortcut>
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className={`${styles.right__userDetails}`}>
+          <HeaderUserInfo />
+        </div>
       </div>
     </header>
   );

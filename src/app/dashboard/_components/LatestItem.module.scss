@@ -1,14 +1,36 @@
 @use "@/styles/mixins" as m;
 
 .container {
-  @include m.flex($justify: space-between, $align: start, $gap: 16);
+  // @include m.flex($justify: space-between, $align: start, $gap: 16);
   padding-block: 24px;
   padding-inline: 24px 32px;
-  max-width: 1400px;
+  // max-width: 1400px;
+  display: grid;
+  grid-template-columns: 50px 2fr 1fr 1fr 1fr 2fr;
+  gap: 16px;
+
+  @include m.media(laptop) {
+    grid-template-columns: 50px 2fr 1fr 1fr 1fr 1fr;
+  }
+
+  @include m.media(tablet) {
+    grid-template-columns: 50px 2fr 1fr 1fr max-content;
+  }
 
   @include m.media(phone) {
+    grid-template-columns: 50px 2fr max-content;
     gap: 10px;
     padding: 10px !important;
+  }
+
+  @include m.media(phone) {
+    grid-template-columns: 50px 2fr min-content;
+    gap: 10px;
+    padding: 10px !important;
+  }
+
+  > :last-child {
+    justify-self: end;
   }
 
   * {
@@ -23,6 +45,7 @@
     }
 
     &__info {
+      width: fit-content;
       @include m.flex($justify: space-between, $gap: 12px, $align: center);
 
       li {

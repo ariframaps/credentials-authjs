@@ -11,7 +11,7 @@ interface Props {
 export const InputComponent = (props: Props) => {
   return (
     <div className={`flex flex-col gap-[8px]`}>
-      <div className="flex items-center justify-between gap-2 pe-1.5">
+      <div className="flex flex-col items-start justify-between gap-1 pe-1.5">
         <label
           className={`${
             props.isError

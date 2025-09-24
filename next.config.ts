@@ -6,6 +6,9 @@ const nextConfig: NextConfig = {
   sassOptions: {
     includePaths: [path.join(__dirname, "src/styles")],
   },
+  images: {
+    domains: ["i.pravatar.cc", "example.com"], // add any external domains here
+  },
 };
 
 export default nextConfig;

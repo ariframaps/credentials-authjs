@@ -1,10 +1,10 @@
-import { ApiErrorResponse } from "@/types/apiResponseTypes";
+import { ApiResponse } from "@/types/apiResponseTypes";
 import { LatestBooking, Reservation, User } from "@/types/dummyTypes";
 
-const HOST_URL = process.env.HOST_URL;
+const HOST_URL = process.env.NEXT_PUBLIC_HOST_URL;
 
 export async function getOverviewRequest(): Promise<
-  Reservation | ApiErrorResponse
+  ApiResponse<Reservation[]>
 > {
   try {
     const res = await fetch(`${HOST_URL}/api/reservation/overview`, {
@@ -14,9 +14,9 @@ export async function getOverviewRequest(): Promise<
       },
     });
 
-    const data: Reservation = await res.json();
+    const data: ApiResponse<Reservation[]> = await res.json();
     return data;
-  } catch (error) {
+  } catch (_error) {
     return {
       errors: "Something went wrong. Please try again later.",
       success: false,
@@ -26,7 +26,7 @@ export async function getOverviewRequest(): Promise<
 }
 
 export async function getLatestRequest(): Promise<
-  LatestBooking | ApiErrorResponse
+  ApiResponse<LatestBooking[]>
 > {
   try {
     const res = await fetch(`${HOST_URL}/api/reservation/latest-booking`, {
@@ -36,9 +36,9 @@ export async function getLatestRequest(): Promise<
       },
     });
 
-    const data: LatestBooking = await res.json();
+    const data: ApiResponse<LatestBooking[]> = await res.json();
     return data;
-  } catch (error) {
+  } catch (_error) {
     return {
       errors: "Something went wrong. Please try again later.",
       success: false,
@@ -47,7 +47,7 @@ export async function getLatestRequest(): Promise<
   }
 }
 
-export async function getUserInfoRequest(): Promise<User | ApiErrorResponse> {
+export async function getUserInfoRequest(): Promise<ApiResponse<User>> {
   try {
     const res = await fetch(`${HOST_URL}/api/user`, {
       method: "GET",
@@ -56,9 +56,9 @@ export async function getUserInfoRequest(): Promise<User | ApiErrorResponse> {
       },
     });
 
-    const data: User = await res.json();
+    const data: ApiResponse<User> = await res.json();
     return data;
-  } catch (error) {
+  } catch (_error) {
     return {
       errors: "Something went wrong. Please try again later.",
       success: false,

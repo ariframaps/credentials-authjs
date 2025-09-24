@@ -7,11 +7,9 @@ const signinStateSchema = FormsSchema.pick({
   email: true,
 });
 
-type SignInStateType = Partial<z.infer<typeof signinStateSchema>>;
-
 interface SignInState {
   step: number;
-  formData: SignInStateType;
+  formData: Partial<z.infer<typeof signinStateSchema>>;
   nextStep: () => void;
   goToStep: (step: number) => void;
   setFormData: (data: Partial<SignInState["formData"]>) => void;
@@ -21,7 +19,7 @@ interface SignInState {
 export const useSignInStore = create<SignInState>()(
   persist(
     (set) => ({
-      step: 0,
+      step: 1,
       formData: {},
       nextStep: () => set((state) => ({ step: Math.min(2, state.step + 1) })), // max 2
       goToStep: (step) => set({ step }),

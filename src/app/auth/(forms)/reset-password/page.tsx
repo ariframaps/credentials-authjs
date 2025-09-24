@@ -12,8 +12,11 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSignInStore } from "../../_stores/signinStore";
-import { useEffect } from "react";
+import { useSignInStore } from "../../../../lib/stores/signinStore";
+import { useEffect, useState } from "react";
+import { forgotPasswordRequest } from "@/lib/services/apiRequests";
+import { XCircleIcon } from "lucide-react";
+import LoadingComponent from "@/components/LoadingComponent";
 
 const resetPasswordSchema = FormsSchema.pick({
   email: true,
@@ -23,26 +26,45 @@ type ResetPasswordType = z.infer<typeof resetPasswordSchema>;
 
 export default function Page() {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const formData = useSignInStore((state) => state.formData);
 
   const form = useForm<ResetPasswordType>({
     resolver: zodResolver(resetPasswordSchema),
   });
 
-  const onSubmit = (data: ResetPasswordType) => {
+  const onSubmit = async (data: ResetPasswordType) => {
     console.log(data);
 
-    // send reset password link to the email
+    if (!formData.email) {
+      router.replace("/auth/sign-in/step-1");
+      return;
+    }
 
-    // if error, show error message
-
-    // if success, show success page
-    router.push("/auth/request-reset-password-sent");
+    setIsLoading(true);
+    await forgotPasswordRequest({ email: formData.email as string })
+      .then((res) => {
+        if (res.success) {
+          console.log(res);
+          router.push("/auth/request-reset-password-sent");
+        } else {
+          form.setError("root", {
+            type: "manual",
+            message: res.errors,
+          });
+          setIsLoading(false);
+          alert(res.errors);
+        }
+        return;
+      })
+      .catch(() => {
+        throw new Error("Something went wrong");
+      });
   };
 
   useEffect(() => {
     form.setValue("email", formData.email || "");
-  }, [formData.email]);
+  }, [form, formData.email]);
 
   return (
     <div className={`${styles.container}`}>
@@ -89,7 +111,22 @@ export default function Page() {
             />
           </InputComponent>
         </div>
-        <Button type="submit">Continue</Button>
+        {form.formState.errors.root && (
+          <div
+            className={`${styles.container__form__info} bg-red-50 border-l-[6px] border-text-danger-tertiary rounded-[8px]`}>
+            <XCircleIcon
+              width={28}
+              height={28}
+              className="text-text-danger-tertiary"
+            />
+            <span className="text-[12px] font-normal text-red-800">
+              {form.formState.errors.root?.message}
+            </span>
+          </div>
+        )}
+        <Button disabled={isLoading} type="submit">
+          {isLoading ? <LoadingComponent size={20} /> : "Continue"}
+        </Button>
         <span className="w-full block h-[1px] bg-neutral-separator"></span>
       </form>
     </div>

@@ -12,8 +12,11 @@ import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSignInStore } from "@/app/auth/_stores/signinStore";
-import { useEffect } from "react";
+import { useSignInStore } from "@/lib/stores/signinStore";
+import { useState } from "react";
+import { Login } from "@/lib/actions/authActions";
+import { XCircleIcon } from "lucide-react";
+import LoadingComponent from "@/components/LoadingComponent";
 
 const signInStep2Schema = FormsSchema.pick({
   password: true,
@@ -23,45 +26,46 @@ type SignInStep2Type = z.infer<typeof signInStep2Schema>;
 
 export default function Page() {
   const router = useRouter();
-  const userStepState = useSignInStore((state) => state.step);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const formData = useSignInStore((state) => state.formData);
-  const goToStep = useSignInStore((state) => state.goToStep);
   const resetState = useSignInStore((state) => state.reset);
   const form = useForm<SignInStep2Type>({
     resolver: zodResolver(signInStep2Schema),
   });
 
-  const onSubmit = (data: SignInStep2Type) => {
-    console.log(data);
+  const onSubmit = async (data: SignInStep2Type) => {
+    if (!formData.email) {
+      form.setError("password", {
+        type: "manual",
+        message: "Email is required",
+      });
+      setIsLoading(true);
+      setTimeout(() => {
+        router.replace("/auth/sign-in/step-1");
+      }, 3000);
+      return;
+    }
 
-    // login the user with the email and password
-    // if error, show error message
-
-    // if success, reset state redirect to the dashboard
     const allSigninData = {
-      ...formData,
+      email: formData.email,
       password: data.password,
     };
 
+    setIsLoading(true);
     // login
+    await Login(allSigninData).catch((err: unknown) => {
+      if (err instanceof Error) {
+        form.setError("root", {
+          type: "manual",
+          message: err.message,
+        });
+        return;
+      }
+    });
 
     resetState();
-
-    router.push("/dashboard");
+    return;
   };
-
-  // redirect inside useEffect
-  useEffect(() => {
-    if (userStepState == 0) {
-      goToStep(1);
-      return;
-    }
-    console.log(userStepState);
-    if (userStepState < 2) {
-      router.replace(`/auth/sign-in/step-${userStepState}`);
-      return;
-    }
-  }, [userStepState, router]);
 
   return (
     <div className={`${styles.container}`}>
@@ -83,7 +87,7 @@ export default function Page() {
       <div className={`${styles.container__header}`}>
         <FormHeader
           title={"Enter your password"}
-          subtitle={"Enter your password for fahmiauliyarohman@gmail.com."}
+          subtitle={`Enter your password for ${formData.email}`}
         />
       </div>
 
@@ -113,7 +117,30 @@ export default function Page() {
           className="text-brand-green-color-01 text-[16px] font-semibold ">
           Forgot Password ?
         </Link>
-        <Button type="submit">Continue</Button>
+        {form.formState.errors.root && (
+          <div
+            className={`${styles.container__form__info} bg-red-50 border-l-[6px] border-text-danger-tertiary rounded-[8px]`}>
+            <XCircleIcon
+              width={28}
+              height={28}
+              className="text-text-danger-tertiary"
+            />
+            <span className="text-[12px] font-normal text-red-800">
+              {form.formState.errors.root?.message}
+            </span>
+          </div>
+        )}
+        <Button type="submit">
+          {isLoading ? (
+            form.formState.errors.root ? (
+              "Redirecting.."
+            ) : (
+              <LoadingComponent size={20} />
+            )
+          ) : (
+            "Continue"
+          )}
+        </Button>
         <span className="w-full block h-[1px] bg-neutral-separator"></span>
       </form>
     </div>

@@ -11,9 +11,10 @@ import { FormsSchema } from "@/types/formsSchema";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSignInStore } from "@/app/auth/_stores/signinStore";
-import { useEffect } from "react";
+import { useSignInStore } from "@/lib/stores/signinStore";
+import { useEffect, useState } from "react";
 import { resendVerifyEmailRequest } from "@/lib/services/apiRequests";
+import LoadingComponent from "@/components/LoadingComponent";
 
 const signInStep1Schema = FormsSchema.pick({
   email: true,
@@ -23,17 +24,19 @@ type SignInStep1Type = z.infer<typeof signInStep1Schema>;
 
 export default function Page() {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const userStepState = useSignInStore((state) => state.step);
   const formData = useSignInStore((state) => state.formData);
   const setFormData = useSignInStore((state) => state.setFormData);
   const nextStep = useSignInStore((state) => state.nextStep);
-  const goToStep = useSignInStore((state) => state.goToStep);
 
   const form = useForm<SignInStep1Type>({
     resolver: zodResolver(signInStep1Schema),
   });
 
   const onSubmit = async (data: SignInStep1Type) => {
+    setIsLoading(true);
     // check email if exists
     const checkEmail = await resendVerifyEmailRequest({ email: data.email });
 
@@ -43,6 +46,7 @@ export default function Page() {
         type: "manual",
         message: "Email not found",
       });
+      setIsLoading(false);
       return;
     } else if (checkEmail.success == false) {
       if (
@@ -55,6 +59,7 @@ export default function Page() {
           type: "manual",
           message: "Email not found",
         });
+        setIsLoading(false);
         return;
       }
     }
@@ -63,23 +68,17 @@ export default function Page() {
     if (!formData.email) {
       setFormData({ email: data.email });
     }
-
     // next step
     if (userStepState == 1) {
       nextStep();
     }
-
     // redirect to step 2
     router.push("/auth/sign-in/step-2");
   };
 
   useEffect(() => {
-    if (userStepState == 0) {
-      goToStep(1);
-      return;
-    }
     form.setValue("email", formData.email || "");
-  }, [userStepState, router]);
+  }, [form, router, formData.email]);
 
   return (
     <div className={`${styles.container}`}>
@@ -111,13 +110,19 @@ export default function Page() {
             />
           </InputComponent>
         </div>
-        <Button type="submit">Continue</Button>
+        <Button type="submit">
+          {isLoading ? <LoadingComponent size={20} /> : "Continue"}
+        </Button>
         <span className="w-full block h-[1px] bg-neutral-separator"></span>
       </form>
 
       {/* signup page button */}
       <Link href={"/auth/sign-up/step-1"}>
-        <Button type="button" variant={"transparent"} className="text-black">
+        <Button
+          disabled={isLoading}
+          type="button"
+          variant={"transparent"}
+          className="text-black">
           Create your partner account
         </Button>
       </Link>

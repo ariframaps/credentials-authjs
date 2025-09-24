@@ -9,6 +9,7 @@ export interface Reservation {
   checkOut: string;
   price: number;
   arrivalTime: string;
+  type: "departure" | "arrival" | "stayover";
 }
 
 export interface LatestBooking {

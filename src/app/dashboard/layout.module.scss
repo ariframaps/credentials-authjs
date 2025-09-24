@@ -15,5 +15,8 @@
 
   &__main {
     flex: 1;
+    @include m.media(phone) {
+      min-height: 88vh;
+    }
   }
 }

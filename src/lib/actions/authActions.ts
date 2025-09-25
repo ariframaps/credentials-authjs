@@ -12,8 +12,6 @@ import { getUserInfoRequest } from "../services/dummyApiRequests";
 
 type LoginType = z.infer<typeof signInRequestBody>;
 export async function Login(form: LoginType) {
-  console.log(form);
-
   // sign in
   const res = await signInRequest({
     ...form,
@@ -42,8 +40,6 @@ export async function Logout() {
 
 type SignupType = z.infer<typeof signUpRequestBody>;
 export async function createAccount(form: SignupType) {
-  console.log(form);
-
   // sign up
   const res = await signUpRequest({
     ...form,

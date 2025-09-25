@@ -31,12 +31,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </p>
       </section>
       <Image
-        className={`${styles.container__banner}`}
-        src={"/auth-banner.png"}
-        alt={"Go For Umrah"}
-        width={500}
-        height={500}
+        className={styles.container__banner}
+        src="/auth-banner.png"
+        alt="Go For Umrah"
         priority
+        quality={100}
+        width={1251}
+        height={800}
+        sizes="(max-width: 800px) 35vw, 50vw"
       />
     </div>
   );

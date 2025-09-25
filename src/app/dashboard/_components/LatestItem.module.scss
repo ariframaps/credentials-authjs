@@ -37,6 +37,12 @@
     flex-shrink: 0;
   }
 
+  &__img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+  }
+
   &__detail1 {
     @include m.flex($direction: column, $gap: 8px, $justify: start);
 

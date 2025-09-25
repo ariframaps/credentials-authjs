@@ -74,8 +74,8 @@ const Sidebar = () => {
         <Image
           src={"/Logo-black.png"}
           alt="Go For Umrah Logo"
-          width={146}
-          height={26}
+          width={400}
+          height={67}
           className={`${styles.header__logoFull}`}
         />
       </div>

@@ -42,6 +42,9 @@
 
   &__logoFull {
     display: block;
+    width: 146px;
+    height: 26px;
+    object-fit: contain;
 
     @include m.media(tablet) {
       display: none;

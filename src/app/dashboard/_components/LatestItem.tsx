@@ -12,9 +12,9 @@ const LatestItem = ({ latest }: { latest: LatestBooking }) => {
       <Image
         src={latest.guestImage}
         alt={"John Miaw"}
-        width={48}
-        height={48}
-        className={`rounded-[8px] `}
+        width={75}
+        height={75}
+        className={`${styles.container__img} rounded-[8px] `}
       />
 
       <div className={`${styles.container__detail1}`}>

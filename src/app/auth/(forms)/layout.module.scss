@@ -2,7 +2,8 @@
 
 .container {
   @include m.flex($justify: center);
-  min-height: 90vh;
+  min-height: 91vh;
+  // height: 100%;
   width: 100%;
 
   &__left {

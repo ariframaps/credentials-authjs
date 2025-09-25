@@ -13,8 +13,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           className={`${styles.header__logo}`}
           src={"/Logo.png"}
           alt="Go For Umrah Logo"
-          width={146}
-          height={26}
+          width={400}
+          height={70}
         />
         <div className={`${styles.header__info}`}>
           <button className={`${styles.header__info__languageBtn}`}>

@@ -47,6 +47,18 @@ export default function Page() {
   });
 
   const onSubmit = async (data: SignUpStep2Type) => {
+    if (!formData.email) {
+      form.setError("root", {
+        type: "manual",
+        message: "Redirecting..",
+      });
+      setIsLoading(true);
+      setTimeout(() => {
+        router.replace("/auth/sign-up/step-1");
+      }, 3000);
+      return;
+    }
+
     if (!countryCode) {
       form.setError("phone", {
         type: "manual",
@@ -57,21 +69,21 @@ export default function Page() {
 
     setIsLoading(true);
     // check useername if already exists
-    const checkEmail = await resendVerifyEmailRequest({
+    const checkUsername = await resendVerifyEmailRequest({
       email: data.username,
     });
 
     // if exists, show error message
-    if (checkEmail.success == true) {
+    if (checkUsername.success == true) {
       form.setError("username", {
         type: "manual",
         message: "Username already taken",
       });
       setIsLoading(false);
       return;
-    } else if (checkEmail.success == false) {
+    } else if (checkUsername.success == false) {
       if (
-        checkEmail.errors ===
+        checkUsername.errors ===
         "Can't resend email code, because account was verified."
       ) {
         form.setError("username", {
@@ -226,7 +238,15 @@ export default function Page() {
           </span>
         </div>
         <Button type="submit" disabled={isLoading}>
-          {isLoading ? <LoadingComponent size={20} /> : "Continue"}
+          {isLoading ? (
+            form.formState.errors.root ? (
+              form.formState.errors.root.message
+            ) : (
+              <LoadingComponent size={20} />
+            )
+          ) : (
+            "Continue"
+          )}
         </Button>
         <span className="w-full block h-[1px] bg-neutral-separator"></span>
       </form>

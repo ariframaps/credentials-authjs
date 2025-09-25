@@ -26,6 +26,11 @@
   &__property {
     @include m.flex($justify: space-between, $align: center, $gap: 8);
 
+    &__img {
+      width: 48px;
+      height: 48px;
+      object-fit: contain;
+    }
     @include m.media(phone) {
       &__img {
         display: none;

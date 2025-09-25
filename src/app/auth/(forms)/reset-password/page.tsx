@@ -34,8 +34,6 @@ export default function Page() {
   });
 
   const onSubmit = async (data: ResetPasswordType) => {
-    console.log(data);
-
     if (!formData.email) {
       router.replace("/auth/sign-in/step-1");
       return;
@@ -45,7 +43,6 @@ export default function Page() {
     await forgotPasswordRequest({ email: formData.email as string })
       .then((res) => {
         if (res.success) {
-          console.log(res);
           router.push("/auth/request-reset-password-sent");
         } else {
           form.setError("root", {

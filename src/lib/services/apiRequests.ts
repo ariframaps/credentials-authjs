@@ -98,7 +98,6 @@ export async function resendVerifyEmailRequest(
   form: z.infer<typeof resendVerifyEmailRequestBody>
 ): Promise<ApiResponse<string>> {
   try {
-    console.log(API_URL);
     const res = await fetch(`${API_URL}/email-verification/resend`, {
       method: "POST",
       headers: {

@@ -31,6 +31,12 @@
     justify-self: end;
   }
 
+  &__img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+  }
+
   &__detail1 {
     width: min-content;
     @include m.flex($direction: column, $gap: 8px, $justify: start);

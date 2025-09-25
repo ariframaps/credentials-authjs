@@ -1,8 +1,6 @@
-"use client";
-
 import Image from "next/image";
 import styles from "@/styles/_infopage.module.scss";
-import { Button } from "@/components/ui/button";
+import NavButton from "@/components/NavButton";
 
 export default function Page() {
   return (
@@ -24,8 +22,9 @@ export default function Page() {
           </p>
         </div>
         <div className={`${styles.main__container__button}`}>
-          <Button>Go to homepage</Button>
-          <Button variant={"transparent"}>Refresh page</Button>
+          <NavButton variant={"transparent"} type="refresh">
+            Refresh page
+          </NavButton>
         </div>
       </section>
     </main>

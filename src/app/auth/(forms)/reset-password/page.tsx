@@ -26,7 +26,6 @@ type ResetPasswordType = z.infer<typeof resetPasswordSchema>;
 
 export default function Page() {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const formData = useSignInStore((state) => state.formData);
 
   const form = useForm<ResetPasswordType>({
@@ -34,29 +33,22 @@ export default function Page() {
   });
 
   const onSubmit = async (data: ResetPasswordType) => {
-    if (!formData.email) {
-      router.replace("/auth/sign-in/step-1");
-      return;
-    }
+    try {
+      const res = await forgotPasswordRequest({ email: data.email });
 
-    setIsLoading(true);
-    await forgotPasswordRequest({ email: formData.email as string })
-      .then((res) => {
-        if (res.success) {
-          router.push("/auth/request-reset-password-sent");
-        } else {
-          form.setError("root", {
-            type: "manual",
-            message: res.errors,
-          });
-          setIsLoading(false);
-          alert(res.errors);
-        }
-        return;
-      })
-      .catch(() => {
-        throw new Error("Something went wrong");
+      if (res.success) {
+        router.push("/auth/request-reset-password-sent");
+      } else {
+        form.setError("root", { type: "manual", message: res.errors });
+        alert(res.errors);
+      }
+    } catch (err) {
+      console.error(err);
+      form.setError("root", {
+        type: "manual",
+        message: "Something went wrong",
       });
+    }
   };
 
   useEffect(() => {
@@ -121,8 +113,12 @@ export default function Page() {
             </span>
           </div>
         )}
-        <Button disabled={isLoading} type="submit">
-          {isLoading ? <LoadingComponent size={20} /> : "Continue"}
+        <Button disabled={form.formState.isSubmitting} type="submit">
+          {form.formState.isSubmitting ? (
+            <LoadingComponent size={20} />
+          ) : (
+            "Continue"
+          )}
         </Button>
         <span className="w-full block h-[1px] bg-neutral-separator"></span>
       </form>

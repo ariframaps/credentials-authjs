@@ -1,12 +1,8 @@
-"use client";
-
 import Image from "next/image";
 import styles from "@/styles/_infopage.module.scss";
-import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
+import NavButton from "@/components/NavButton";
 
 export default function Page() {
-  const router = useRouter();
   return (
     <main className={`${styles.main} h-[100vh]`}>
       <section className={`${styles.main__container}`}>
@@ -26,7 +22,9 @@ export default function Page() {
           </p>
         </div>
         <div className={`${styles.main__container__button}`}>
-          <Button onClick={() => router.back()}>Go back</Button>
+          <NavButton variant="transparent" type="back">
+            Go back
+          </NavButton>
         </div>
       </section>
     </main>

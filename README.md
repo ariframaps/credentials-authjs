@@ -46,23 +46,23 @@ It covers user authentication (sign-up, sign-in, reset password) and a business 
 - [React Hook Form](https://react-hook-form.com/) – Form handling with performance focus
 - [Zustand](https://zustand-demo.pmnd.rs/) – Lightweight global state management
 
----
 
+---
 
 ⚙️ Environment Variables
 
 Create a .env.local file in the root directory with:
 
-# NextAuth secret (generate with `npx auth secret`)
+## NextAuth secret (generate with `npx auth secret`)
 NEXTAUTH_SECRET=your_generated_secret_here
 
-# NextAuth URL (adjust depending on environment)
+## NextAuth URL (adjust depending on environment)
 NEXTAUTH_URL=http://localhost:3000
 
-# API Base URL
+## API Base URL
 NEXT_PUBLIC_API_BASE_URL=https://goforumrah-api.illiyin.studio/api
 
-# (Optional) Deployment URL for production
+## (Optional) Deployment URL for production
 # NEXTAUTH_URL=https://your-deployed-domain.vercel.app
 
 👉 Generate a secure secret for NextAuth:

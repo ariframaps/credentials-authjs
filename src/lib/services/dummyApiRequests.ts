@@ -1,13 +1,11 @@
 import { ApiResponse } from "@/types/apiResponseTypes";
 import { LatestBooking, Reservation, User } from "@/types/dummyTypes";
 
-const HOST_URL = process.env.NEXT_PUBLIC_HOST_URL;
-
 export async function getOverviewRequest(): Promise<
   ApiResponse<Reservation[]>
 > {
   try {
-    const res = await fetch(`${HOST_URL}/api/reservation/overview`, {
+    const res = await fetch(`/api/reservation/overview`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -29,7 +27,7 @@ export async function getLatestRequest(): Promise<
   ApiResponse<LatestBooking[]>
 > {
   try {
-    const res = await fetch(`${HOST_URL}/api/reservation/latest-booking`, {
+    const res = await fetch(`/api/reservation/latest-booking`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -49,7 +47,7 @@ export async function getLatestRequest(): Promise<
 
 export async function getUserInfoRequest(): Promise<ApiResponse<User>> {
   try {
-    const res = await fetch(`${HOST_URL}/api/user`, {
+    const res = await fetch(`/api/user`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

@@ -17,8 +17,8 @@ const Header = () => {
           <Image
             src={"/hotel-logo.png"}
             alt={"Hotel"}
-            width={48}
-            height={48}
+            width={75}
+            height={75}
             className={`${styles.left__property__img}`}
           />
           <div

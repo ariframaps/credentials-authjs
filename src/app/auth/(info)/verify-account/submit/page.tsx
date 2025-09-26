@@ -15,6 +15,7 @@ import z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { InputComponent } from "@/components/InputComponent";
+import { XCircleIcon } from "lucide-react";
 
 const submitResetPasswordSchema = FormsSchema.pick({
   code: true,
@@ -44,6 +45,7 @@ export default function Page() {
       });
 
       if (res.success) {
+        alert("Account successfully verificated. please log-in to continue");
         router.push("/auth/sign-in/step-1");
       } else {
         form.setError("root", { type: "manual", message: res.errors });
@@ -94,7 +96,7 @@ export default function Page() {
             sent.
           </p>
           <form onSubmit={form.handleSubmit(onSubmit)} className="">
-            <div className="">
+            <div className="mb-5">
               <InputComponent
                 name={"email"}
                 label={"Email Address"}
@@ -124,6 +126,19 @@ export default function Page() {
                 />
               </InputComponent>
             </div>
+            {form.formState.errors.root && (
+              <div
+                className={`flex items-center p-3 mb-5 gap-2 bg-red-50 border-l-[6px] border-text-danger-tertiary rounded-[8px]`}>
+                <XCircleIcon
+                  width={20}
+                  height={20}
+                  className="text-text-danger-tertiary"
+                />
+                <span className="text-[14px] font-normal text-start text-red-800">
+                  {form.formState.errors.root?.message}
+                </span>
+              </div>
+            )}
             <Button disabled={form.formState.isSubmitting} type="submit">
               {form.formState.isSubmitting ? (
                 <LoadingComponent size={20} />

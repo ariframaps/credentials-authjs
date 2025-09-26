@@ -46,6 +46,7 @@ export default function Page() {
       });
 
       if (res.success) {
+        alert("Successfully created new password. please log-in to continue");
         router.push("/auth/sign-in/step-1");
       } else {
         form.setError("root", { type: "manual", message: res.errors });
@@ -135,13 +136,13 @@ export default function Page() {
             </div>
             {form.formState.errors.root && (
               <div
-                className={`${styles.container__form__info} bg-red-50 border-l-[6px] border-text-danger-tertiary rounded-[8px]`}>
+                className={`flex items-center p-3 mb-5 gap-2 bg-red-50 border-l-[6px] border-text-danger-tertiary rounded-[8px]`}>
                 <XCircleIcon
-                  width={28}
-                  height={28}
+                  width={20}
+                  height={20}
                   className="text-text-danger-tertiary"
                 />
-                <span className="text-[12px] font-normal text-red-800">
+                <span className="text-[14px] font-normal text-red-800">
                   {form.formState.errors.root?.message}
                 </span>
               </div>

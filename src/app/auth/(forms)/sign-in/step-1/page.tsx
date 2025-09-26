@@ -36,7 +36,6 @@ export default function Page() {
       const res = await resendVerifyEmailRequest({ email: data.email });
 
       if (res.success === true) {
-        // API says "email not found"
         form.setError("email", { type: "manual", message: "Email not found" });
         return;
       }

@@ -9,7 +9,7 @@ export default function Page() {
     <div className={`${styles.container}`}>
       <div className={`${styles.content}`}>
         <div className={`${styles.content__header}`}>
-          <h2 className="font-semibold text-[18px] xs:text-[22px] phone:text-[28px] w-min xs:w-max">
+          <h2 className="font-semibold text-[16px] xs:text-[22px] phone:text-[28px] w-min xs:w-max">
             Reservaton Overview
           </h2>
           <HeaderButton />
@@ -20,7 +20,7 @@ export default function Page() {
       </div>
       <div className={`${styles.content}`}>
         <div className={`${styles.content__header}`}>
-          <h2 className="font-semibold text-[18px] xs:text-[22px] phone:text-[28px] ">
+          <h2 className="font-semibold text-[16px] xs:text-[22px] phone:text-[28px] ">
             Latest Booking
           </h2>
           <HeaderButton />
@@ -38,7 +38,7 @@ const HeaderButton = () => {
     <Link href={"/reservation"}>
       <Button
         variant={"transparent"}
-        className="font-semibold text-[12px] px-[16px] py-[8px] phone:px-[20px] phone:py-[12px]">
+        className="font-medium phone:font-semibold text-[12px] px-[16px] py-[8px] phone:px-[20px] phone:py-[12px]">
         See all reservation
       </Button>
     </Link>

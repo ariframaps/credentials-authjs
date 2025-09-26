@@ -79,7 +79,7 @@ export default function Page() {
       <div className={`${styles.container__header}`}>
         <FormHeader
           title={"Enter your password"}
-          subtitle={`Enter your password for ${formData.email}`}
+          subtitle={`Enter your password for ${formData.email || ""}`}
         />
       </div>
 

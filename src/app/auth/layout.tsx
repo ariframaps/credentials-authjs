@@ -13,19 +13,19 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           className={`${styles.header__logo}`}
           src={"/Logo.png"}
           alt="Go For Umrah Logo"
-          width={400}
-          height={70}
+          width={300}
+          height={60}
         />
         <div className={`${styles.header__info}`}>
           <button className={`${styles.header__info__languageBtn}`}>
-            <GlobeIcon width={24} height={24} />
-            <span>En</span>
+            <GlobeIcon width={24} height={24} className="size-3 phone:size-4" />
+            <span className="text-[13px] phone:text-base">En</span>
           </button>
           <span className="h-full w-[1px] bg-neutral-subtle"></span>
           <Link href={"/help"}>
             <Button
               variant={"transparent"}
-              className="cursor-pointer px-[24px] py-[12px] rounded-[8px] text-neutral-white font-semibold text-[12px] hover:bg-brand-green-color-01">
+              className="cursor-pointer px-[18px] py-[7px] phone:px-[24px] phone:py-[12px] rounded-[8px] text-neutral-white font-semibold text-[12px] hover:bg-brand-green-color-01">
               Help
             </Button>
           </Link>

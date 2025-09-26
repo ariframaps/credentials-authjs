@@ -17,7 +17,7 @@
     padding: 20px 48px;
   }
   @include m.media(phone) {
-    padding: 20px 30px;
+    padding: 14px 30px;
   }
   @include m.media(xs) {
     padding-inline: 5%;
@@ -27,16 +27,22 @@
     object-fit: contain;
     width: 146px;
     height: 26px;
+
+    @include m.media(phone) {
+      width: 120;
+      height: 22px;
+    }
   }
 
   &__info {
     @include m.flex($gap: 32, $align: center);
+
     @include m.media(phone) {
-      gap: 16px;
+      gap: 10px;
     }
 
     &__languageBtn {
-      @include m.flex($gap: 4);
+      @include m.flex($gap: 4, $align: center);
     }
   }
 }

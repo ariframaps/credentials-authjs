@@ -19,14 +19,8 @@
 
   @include m.media(phone) {
     grid-template-columns: 50px 2fr max-content;
-    gap: 10px;
-    padding: 10px !important;
-  }
-
-  @include m.media(phone) {
-    grid-template-columns: 50px 2fr min-content;
-    gap: 10px;
-    padding: 10px !important;
+    gap: 8px;
+    padding: 8px !important;
   }
 
   > :last-child {
@@ -41,18 +35,26 @@
     width: 48px;
     height: 48px;
     object-fit: contain;
+    @include m.media(phone) {
+      width: 40px;
+      height: 40px;
+    }
   }
 
   &__detail1 {
     @include m.flex($direction: column, $gap: 8px, $justify: start);
 
     @include m.media(phone) {
-      gap: 4px;
+      gap: 2px;
     }
 
     &__info {
       width: fit-content;
       @include m.flex($justify: space-between, $gap: 12px, $align: center);
+
+      @include m.media(phone) {
+        grid-template-areas: 8px;
+      }
 
       li {
         > *:first-child {

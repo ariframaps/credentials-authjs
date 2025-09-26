@@ -6,7 +6,7 @@ interface Props {
 const FormHeader = (props: Props) => {
   return (
     <>
-      <h1 className="font-semibold phone:text-[36px] text-[32px] leading-[1.2em] text-neutral-primary">
+      <h1 className="font-semibold phone:text-[36px] text-[28px] leading-[1.2em] text-neutral-primary">
         {props.title}
       </h1>
       <p className="text-neutral-secondary font-normal text-[16px] leading-[1.5em]">

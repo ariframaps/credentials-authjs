@@ -18,9 +18,9 @@
   }
 
   @include m.media(phone) {
-    gap: 10px;
+    gap: 6px;
     grid-template-columns: 50px 2fr max-content;
-    padding: 10px !important;
+    padding: 8px !important;
   }
 
   * {
@@ -35,6 +35,10 @@
     width: 48px;
     height: 48px;
     object-fit: contain;
+    @include m.media(phone) {
+      width: 40px;
+      height: 40px;
+    }
   }
 
   &__detail1 {
@@ -42,12 +46,15 @@
     @include m.flex($direction: column, $gap: 8px, $justify: start);
 
     @include m.media(tablet) {
-      gap: 4px;
+      gap: 2px;
       width: max-content;
     }
 
     &__info {
       @include m.flex($justify: space-between, $gap: 12px, $align: center);
+      @include m.media(phone) {
+        gap: 8px;
+      }
 
       &__divider {
         width: 5px;

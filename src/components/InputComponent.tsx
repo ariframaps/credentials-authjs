@@ -21,17 +21,15 @@ export const InputComponent = (props: Props) => {
           htmlFor={props.name}>
           {props.label}
         </label>
-        {/* {props.isError && (
-        )} */}
         {props.isError && (
-          <div className="flex items-center gap-1">
+          <div className="flex items-center justify-between w-full gap-1">
+            <span className="text-text-danger-tertiary">{props.message}</span>
             <InfoIcon
-              width={15}
-              height={15}
+              width={20}
+              height={20}
               viewBox="0 0 28 28"
               className="text-text-danger-tertiary"
             />
-            <span className="text-text-danger-tertiary">{props.message}</span>
           </div>
         )}
       </div>

@@ -15,6 +15,7 @@ import { useSignInStore } from "@/lib/stores/signinStore";
 import { useEffect, useState } from "react";
 import { resendVerifyEmailRequest } from "@/lib/services/apiRequests";
 import LoadingComponent from "@/components/LoadingComponent";
+import { XCircleIcon } from "lucide-react";
 
 const signInStep1Schema = FormsSchema.pick({
   email: true,
@@ -24,61 +25,44 @@ type SignInStep1Type = z.infer<typeof signInStep1Schema>;
 
 export default function Page() {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const userStepState = useSignInStore((state) => state.step);
   const formData = useSignInStore((state) => state.formData);
   const setFormData = useSignInStore((state) => state.setFormData);
-  const nextStep = useSignInStore((state) => state.nextStep);
-
   const form = useForm<SignInStep1Type>({
     resolver: zodResolver(signInStep1Schema),
   });
 
   const onSubmit = async (data: SignInStep1Type) => {
-    setIsLoading(true);
-    // check email if exists
-    const checkEmail = await resendVerifyEmailRequest({ email: data.email });
+    try {
+      const res = await resendVerifyEmailRequest({ email: data.email });
 
-    // if exists, show error message
-    if (checkEmail.success == true) {
-      form.setError("email", {
-        type: "manual",
-        message: "Email not found",
-      });
-      setIsLoading(false);
-      return;
-    } else if (checkEmail.success == false) {
-      if (
-        !(
-          checkEmail.errors ===
-          "Can't resend email code, because account was verified."
-        )
-      ) {
-        form.setError("email", {
-          type: "manual",
-          message: "Email not found",
-        });
-        setIsLoading(false);
+      if (res.success === true) {
+        // API says "email not found"
+        form.setError("email", { type: "manual", message: "Email not found" });
         return;
       }
-    }
 
-    // if exists, store email in state
-    if (!formData.email) {
+      if (
+        res.success === false &&
+        res.errors !== "Can't resend email code, because account was verified."
+      ) {
+        form.setError("email", { type: "manual", message: "Email not found" });
+        return;
+      }
+
       setFormData({ email: data.email });
+      router.push("/auth/sign-in/step-2");
+    } catch (err) {
+      console.error(err);
+      form.setError("root", {
+        type: "manual",
+        message: "Something went wrong",
+      });
     }
-    // next step
-    if (userStepState == 1) {
-      nextStep();
-    }
-    // redirect to step 2
-    router.push("/auth/sign-in/step-2");
   };
 
   useEffect(() => {
-    form.setValue("email", formData.email || "");
-  }, [form, router, formData.email]);
+    if (formData.email) form.setValue("email", formData.email);
+  }, [formData.email, form.setValue]);
 
   return (
     <div className={`${styles.container}`}>
@@ -110,8 +94,25 @@ export default function Page() {
             />
           </InputComponent>
         </div>
-        <Button type="submit">
-          {isLoading ? <LoadingComponent size={20} /> : "Continue"}
+        {form.formState.errors.root && (
+          <div
+            className={`${styles.container__form__info} bg-red-50 border-l-[6px] border-text-danger-tertiary rounded-[8px]`}>
+            <XCircleIcon
+              width={28}
+              height={28}
+              className="text-text-danger-tertiary"
+            />
+            <span className="text-[12px] font-normal text-red-800">
+              {form.formState.errors.root?.message}
+            </span>
+          </div>
+        )}
+        <Button type="submit" disabled={form.formState.isSubmitting}>
+          {form.formState.isSubmitting ? (
+            <LoadingComponent size={20} />
+          ) : (
+            "Continue"
+          )}
         </Button>
         <span className="w-full block h-[1px] bg-neutral-separator"></span>
       </form>
@@ -119,7 +120,7 @@ export default function Page() {
       {/* signup page button */}
       <Link href={"/auth/sign-up/step-1"}>
         <Button
-          disabled={isLoading}
+          disabled={form.formState.isSubmitting}
           type="button"
           variant={"transparent"}
           className="text-black">

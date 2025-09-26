@@ -27,15 +27,13 @@ type SignUpStep3Type = z.infer<typeof signUpStep3Schema>;
 
 export default function Page() {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const formData = useSignUpStore((state) => state.formData);
   const form = useForm<SignUpStep3Type>({
     resolver: zodResolver(signUpStep3Schema),
   });
 
   const onSubmit = async (data: SignUpStep3Type) => {
-    setIsLoading(false);
-    // if something empty then go back
+    // Check required fields from previous steps
     if (
       !formData.email ||
       !formData.username ||
@@ -47,32 +45,34 @@ export default function Page() {
         type: "manual",
         message: "All fields need to be filled first!",
       });
-      setIsLoading(true);
-      setTimeout(() => {
-        router.replace("/auth/sign-up/step-1");
-      }, 3000);
+      setTimeout(() => router.replace("/auth/sign-up/step-1"), 3000);
       return;
     }
 
-    // check if password and confirm password match
+    // Password confirmation check
     if (data.password !== data.confirmPassword) {
       form.setError("confirmPassword", {
         type: "manual",
-        message: "password doesnt match with confirm password",
+        message: "Passwords do not match",
       });
     }
-    // submit the form data to the server
+
     const allSignupData = {
       ...formData,
       phone: `${formData.countryCode}${formData.phone}`,
       password: data.password,
     };
 
-    setIsLoading(true);
-    await createAccount(allSignupData as z.infer<typeof signUpRequestBody>);
-
-    // if successful, redirect to the verify page
-    router.push("/auth/verify-account");
+    try {
+      await createAccount(allSignupData as z.infer<typeof signUpRequestBody>);
+      router.push("/auth/verify-account");
+    } catch (err) {
+      console.error(err);
+      form.setError("root", {
+        type: "manual",
+        message: "Failed to create account. Please try again.",
+      });
+    }
   };
 
   return (
@@ -150,13 +150,9 @@ export default function Page() {
             </span>
           </div>
         )}
-        <Button disabled={isLoading} type="submit">
-          {isLoading ? (
-            form.formState.errors.root ? (
-              "Redirecting.."
-            ) : (
-              <LoadingComponent size={20} />
-            )
+        <Button disabled={form.formState.isSubmitting} type="submit">
+          {form.formState.errors ? (
+            <LoadingComponent size={20} />
           ) : (
             "Create account"
           )}

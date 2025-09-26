@@ -11,8 +11,7 @@ import SettingIcon from "@/components/svg/SettingIcon";
 import { Calendar, ChevronsRightIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import LogoCompact from "@/components/svg/LogoCompact";
-import { useEffect, useState } from "react";
-import { useSignUpStore } from "@/lib/stores/signupStore";
+import { useState } from "react";
 
 // all nav link for side bar
 const navItems = [
@@ -51,12 +50,6 @@ const navItems = [
 const Sidebar = () => {
   const pathname = usePathname(); // get curretn path
   const [isOpen, setIsOpen] = useState(false);
-  const resetState = useSignUpStore((state) => state.reset);
-
-  // clear signup state
-  useEffect(() => {
-    resetState();
-  }, [resetState]);
 
   return (
     <nav

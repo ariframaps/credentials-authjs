@@ -1,5 +1,6 @@
 "use client";
 
+import LoadingComponent from "@/components/LoadingComponent";
 import styles from "./HeaderUserInfo.module.scss";
 import DownArrow from "@/components/svg/DownArrow";
 import { DropdownMenuShortcut } from "@/components/ui/dropdown-menu";
@@ -13,6 +14,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { Logout } from "@/lib/actions/authActions";
+import { getUserInfoRequest } from "@/lib/services/dummyApiRequests";
 import { LogOut } from "lucide-react";
 import { User } from "next-auth";
 import Image from "next/image";
@@ -20,16 +22,14 @@ import { useEffect, useState } from "react";
 
 const HeaderUserInfo = () => {
   const [user, setUser] = useState<User | null>(null);
-
-  const logoutHandler = async () => {
-    await Logout();
-  };
+  const [isFetching, setIsFetching] = useState(true);
 
   useEffect(() => {
     const getSession = async () => {
-      const res = await fetch("/api/auth/session");
-      const session = await res.json();
-      if (session?.user) setUser(session.user);
+      setIsFetching(true);
+      const res = await getUserInfoRequest();
+      if (res.success) setUser(res.data);
+      setIsFetching(false);
     };
     getSession();
   }, []);
@@ -47,7 +47,11 @@ const HeaderUserInfo = () => {
             height={32}
           />
           <span className="font-semibold text-[14px] text-neutral-primary">
-            John doe
+            {isFetching ? (
+              <LoadingComponent size={10} />
+            ) : (
+              user?.name ?? "Unknown"
+            )}
           </span>
           <DownArrow
             width={20}
@@ -57,20 +61,23 @@ const HeaderUserInfo = () => {
           />
         </button>
       </DropdownMenuTrigger>
+
       <DropdownMenuContent className="w-fit bg-neutral-white" align="end">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuGroup>
           <DropdownMenuItem disabled>
             <span
               className={`duration-200 flex items-center gap-2 rounded-[8px] text-[14px] font-normal text-neutral-primary`}>
-              {user?.name}
+              {isFetching ? <LoadingComponent size={10} /> : user?.name}
             </span>
           </DropdownMenuItem>
-          <DropdownMenuItem disabled>{user?.email}</DropdownMenuItem>
+          <DropdownMenuItem disabled>
+            {isFetching ? "..." : user?.email}
+          </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem className="flex" onClick={logoutHandler}>
+          <DropdownMenuItem className="flex" onClick={Logout}>
             Log out
             <DropdownMenuShortcut>
               <LogOut />

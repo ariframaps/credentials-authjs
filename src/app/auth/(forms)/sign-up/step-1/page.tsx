@@ -15,68 +15,49 @@ import { useSignUpStore } from "@/lib/stores/signupStore";
 import { useEffect, useState } from "react";
 import { resendVerifyEmailRequest } from "@/lib/services/apiRequests";
 import LoadingComponent from "@/components/LoadingComponent";
+import { XCircleIcon } from "lucide-react";
 
 const signUpStep1Schema = FormsSchema.pick({ email: true });
 type SignUpStep1Type = z.infer<typeof signUpStep1Schema>;
 
 export default function Page() {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const userStepState = useSignUpStore((state) => state.step);
   const formData = useSignUpStore((state) => state.formData);
   const setFormData = useSignUpStore((state) => state.setFormData);
-  const nextStep = useSignUpStore((state) => state.nextStep);
   const form = useForm<SignUpStep1Type>({
     resolver: zodResolver(signUpStep1Schema),
   });
 
   const onSubmit = async (data: SignUpStep1Type) => {
     try {
-      setIsLoading(true);
-      // check email if already exists
-      const checkEmail = await resendVerifyEmailRequest({ email: data.email });
+      const res = await resendVerifyEmailRequest({ email: data.email });
 
-      // if exists, show error message
-      if (checkEmail.success == true) {
+      // if email already exists
+      if (
+        res.success === true ||
+        res.errors === "Can't resend email code, because account was verified."
+      ) {
         form.setError("email", {
           type: "manual",
           message: "Email already exists",
         });
-        setIsLoading(false);
         return;
-      } else if (checkEmail.success == false) {
-        if (
-          checkEmail.errors ===
-          "Can't resend email code, because account was verified."
-        ) {
-          form.setError("email", {
-            type: "manual",
-            message: "Email already exists",
-          });
-          setIsLoading(false);
-          return;
-        }
       }
 
-      // if not exists, save email to signup state
-      if (!formData.email) {
-        setFormData({ email: data.email });
-      }
-
-      // update the step in the signup state
-      if (userStepState === 1) {
-        nextStep();
-      }
-      // redirect to step 2
+      setFormData({ email: data.email });
       router.push("/auth/sign-up/step-2");
-    } catch (_err) {
-      alert("something went wrong");
+    } catch (err) {
+      console.error(err);
+      form.setError("root", {
+        type: "manual",
+        message: "Something went wrong. Please try again.",
+      });
     }
   };
 
   useEffect(() => {
-    form.setValue("email", formData.email || "");
-  }, [formData.email, form]);
+    if (formData.email) form.setValue("email", formData.email);
+  }, [formData.email, form.setValue]);
 
   return (
     <div className={`${styles.container}`}>
@@ -108,8 +89,25 @@ export default function Page() {
             />
           </InputComponent>
         </div>
-        <Button type="submit" disabled={isLoading}>
-          {isLoading ? <LoadingComponent size={20} /> : "Continue"}
+        {form.formState.errors.root && (
+          <div
+            className={`${styles.container__form__info} bg-red-50 border-l-[6px] border-text-danger-tertiary rounded-[8px]`}>
+            <XCircleIcon
+              width={28}
+              height={28}
+              className="text-text-danger-tertiary"
+            />
+            <span className="text-[12px] font-normal text-red-800">
+              {form.formState.errors.root?.message}
+            </span>
+          </div>
+        )}
+        <Button type="submit" disabled={form.formState.isSubmitting}>
+          {form.formState.isSubmitting ? (
+            <LoadingComponent size={20} />
+          ) : (
+            "Continue"
+          )}
         </Button>
         <span className="w-full block h-[1px] bg-neutral-separator"></span>
       </form>

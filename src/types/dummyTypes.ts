@@ -21,11 +21,3 @@ export interface LatestBooking {
   checkOut: string;
   status: "Confirmed" | "Pending" | "Cancelled";
 }
-
-export interface User {
-  id: string;
-  fullname: string;
-  email: string;
-  username: string;
-  phone: string;
-}

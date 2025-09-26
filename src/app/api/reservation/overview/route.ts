@@ -1,7 +1,7 @@
 import { ReservationsDummyData } from "@/dummydata/reservations";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
-export async function GET(_req: NextRequest) {
+export async function GET() {
   try {
     return NextResponse.json(
       {
@@ -11,9 +11,14 @@ export async function GET(_req: NextRequest) {
       },
       { status: 200 }
     );
-  } catch (_err) {
+  } catch (err) {
+    console.error("GET /api/reservations failed:", err);
     return NextResponse.json(
-      { error: "failed to load reservations" },
+      {
+        success: false,
+        status_code: 500,
+        errors: "Failed to load reservations",
+      },
       { status: 500 }
     );
   }

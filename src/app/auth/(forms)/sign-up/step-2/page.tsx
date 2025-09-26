@@ -36,26 +36,17 @@ type SignUpStep2Type = z.infer<typeof signUpStep2Schema>;
 
 export default function Page() {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [countryCode, setCountryCode] = useState<string>("");
-  const userStepState = useSignUpStore((state) => state.step);
   const formData = useSignUpStore((state) => state.formData);
   const setFormData = useSignUpStore((state) => state.setFormData);
-  const nextStep = useSignUpStore((state) => state.nextStep);
   const form = useForm<SignUpStep2Type>({
     resolver: zodResolver(signUpStep2Schema),
   });
 
   const onSubmit = async (data: SignUpStep2Type) => {
     if (!formData.email) {
-      form.setError("root", {
-        type: "manual",
-        message: "Redirecting..",
-      });
-      setIsLoading(true);
-      setTimeout(() => {
-        router.replace("/auth/sign-up/step-1");
-      }, 3000);
+      form.setError("root", { type: "manual", message: "Redirecting..." });
+      setTimeout(() => router.replace("/auth/sign-up/step-1"), 3000);
       return;
     }
 
@@ -67,48 +58,37 @@ export default function Page() {
       return;
     }
 
-    setIsLoading(true);
-    // check useername if already exists
-    const checkUsername = await resendVerifyEmailRequest({
-      email: data.username,
-    });
+    try {
+      const res = await resendVerifyEmailRequest({ email: data.username });
 
-    // if exists, show error message
-    if (checkUsername.success == true) {
-      form.setError("username", {
-        type: "manual",
-        message: "Username already taken",
-      });
-      setIsLoading(false);
-      return;
-    } else if (checkUsername.success == false) {
       if (
-        checkUsername.errors ===
-        "Can't resend email code, because account was verified."
+        res.success === true ||
+        res.errors === "Can't resend email code, because account was verified."
       ) {
         form.setError("username", {
           type: "manual",
           message: "Username already taken",
         });
-        setIsLoading(false);
         return;
       }
-    }
 
-    // save data to signup state
-    setFormData({
-      firstname: data.firstname,
-      lastname: data.lastname,
-      username: data.username,
-      phone: data.phone,
-      countryCode: countryCode,
-    });
-    // set step state to 3
-    if (userStepState === 2) {
-      nextStep();
+      // Save data to signup state
+      setFormData({
+        firstname: data.firstname,
+        lastname: data.lastname,
+        username: data.username,
+        phone: data.phone,
+        countryCode,
+      });
+
+      router.push("/auth/sign-up/step-3");
+    } catch (err) {
+      console.error(err);
+      form.setError("root", {
+        type: "manual",
+        message: "Something went wrong. Please try again.",
+      });
     }
-    // // redirect to step 3
-    router.push("/auth/sign-up/step-3");
   };
 
   useEffect(() => {
@@ -119,7 +99,7 @@ export default function Page() {
       phone: formData.phone || "",
     });
     setCountryCode(formData.countryCode || "");
-  }, [form, formData]);
+  }, [formData, form.reset]);
 
   return (
     <div className={`${styles.container}`}>
@@ -237,13 +217,9 @@ export default function Page() {
             sign in.`}
           </span>
         </div>
-        <Button type="submit" disabled={isLoading}>
-          {isLoading ? (
-            form.formState.errors.root ? (
-              form.formState.errors.root.message
-            ) : (
-              <LoadingComponent size={20} />
-            )
+        <Button type="submit" disabled={form.formState.isSubmitting}>
+          {form.formState.isSubmitting ? (
+            <LoadingComponent size={20} />
           ) : (
             "Continue"
           )}

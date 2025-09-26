@@ -13,7 +13,7 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSignInStore } from "../../../../lib/stores/signinStore";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { forgotPasswordRequest } from "@/lib/services/apiRequests";
 import { XCircleIcon } from "lucide-react";
 import LoadingComponent from "@/components/LoadingComponent";
@@ -40,7 +40,6 @@ export default function Page() {
         router.push("/auth/request-reset-password-sent");
       } else {
         form.setError("root", { type: "manual", message: res.errors });
-        alert(res.errors);
       }
     } catch (err) {
       console.error(err);

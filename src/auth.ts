@@ -8,16 +8,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       credentials: {
         email: {},
         id: {},
-        username: {},
       },
       authorize: async (credentials) => {
-        const { email, id, username } = credentials;
+        const { email, id } = credentials;
         let user = null;
 
         user = {
           id: String(id),
           email: email as string,
-          name: username as string,
+          name: "John Doe",
           image: null,
         };
 
@@ -30,10 +29,3 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     signIn: "/auth/sign-in/step-1",
   },
 });
-
-// const user = {
-//   id: "miaw",
-//   email: "miaw@mail.com",
-//   name: "ariframa",
-//   image: null,
-// };

@@ -1,11 +1,15 @@
 import { ApiResponse } from "@/types/apiResponseTypes";
-import { LatestBooking, Reservation, User } from "@/types/dummyTypes";
+import { LatestBooking, Reservation } from "@/types/dummyTypes";
+import { User } from "next-auth";
+
+const HOST = process.env.NEXT_PUBLIC_HOST_URL;
 
 export async function getOverviewRequest(): Promise<
   ApiResponse<Reservation[]>
 > {
+  console.log(HOST);
   try {
-    const res = await fetch(`/api/reservation/overview`, {
+    const res = await fetch(`${HOST}/api/reservation/overview`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -14,7 +18,8 @@ export async function getOverviewRequest(): Promise<
 
     const data: ApiResponse<Reservation[]> = await res.json();
     return data;
-  } catch (_error) {
+  } catch (error) {
+    console.error(error);
     return {
       errors: "Something went wrong. Please try again later.",
       success: false,
@@ -27,7 +32,7 @@ export async function getLatestRequest(): Promise<
   ApiResponse<LatestBooking[]>
 > {
   try {
-    const res = await fetch(`/api/reservation/latest-booking`, {
+    const res = await fetch(`${HOST}/api/reservation/latest-booking`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -36,7 +41,8 @@ export async function getLatestRequest(): Promise<
 
     const data: ApiResponse<LatestBooking[]> = await res.json();
     return data;
-  } catch (_error) {
+  } catch (error) {
+    console.error(error);
     return {
       errors: "Something went wrong. Please try again later.",
       success: false,
@@ -47,7 +53,7 @@ export async function getLatestRequest(): Promise<
 
 export async function getUserInfoRequest(): Promise<ApiResponse<User>> {
   try {
-    const res = await fetch(`/api/user`, {
+    const res = await fetch(`${HOST}/api/user`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -56,7 +62,8 @@ export async function getUserInfoRequest(): Promise<ApiResponse<User>> {
 
     const data: ApiResponse<User> = await res.json();
     return data;
-  } catch (_error) {
+  } catch (error) {
+    console.error(error);
     return {
       errors: "Something went wrong. Please try again later.",
       success: false,

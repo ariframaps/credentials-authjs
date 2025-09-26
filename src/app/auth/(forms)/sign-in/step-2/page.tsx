@@ -13,7 +13,6 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSignInStore } from "@/lib/stores/signinStore";
-import { useState } from "react";
 import { Login } from "@/lib/actions/authActions";
 import { XCircleIcon } from "lucide-react";
 import LoadingComponent from "@/components/LoadingComponent";
@@ -26,7 +25,6 @@ type SignInStep2Type = z.infer<typeof signInStep2Schema>;
 
 export default function Page() {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const formData = useSignInStore((state) => state.formData);
   const resetState = useSignInStore((state) => state.reset);
   const form = useForm<SignInStep2Type>({
@@ -35,42 +33,37 @@ export default function Page() {
 
   const onSubmit = async (data: SignInStep2Type) => {
     if (!formData.email) {
-      form.setError("password", {
+      form.setError("root", {
         type: "manual",
         message: "Email is required",
       });
-      setIsLoading(true);
       setTimeout(() => {
         router.replace("/auth/sign-in/step-1");
       }, 3000);
       return;
     }
 
-    const allSigninData = {
-      email: formData.email,
-      password: data.password,
-    };
+    try {
+      const allSigninData = {
+        email: formData.email,
+        password: data.password,
+      };
 
-    setIsLoading(true);
-    // login
-    await Login(allSigninData).catch((err: unknown) => {
-      if (err instanceof Error) {
+      await Login(allSigninData);
+      resetState();
+    } catch (err) {
+      if (err instanceof Error && err.message === "Wrong password.") {
         form.setError("root", {
           type: "manual",
-          message: err.message,
+          message: "Wrong password.",
         });
-        return;
       }
-    });
-
-    resetState();
-    return;
+    }
   };
 
   return (
     <div className={`${styles.container}`}>
       {/* back to previous step button */}
-
       <Link
         href={"/auth/sign-in/step-1"}
         className={`${styles.container__backBtn} text-neutral-primary font-semibold text-[18px]`}>
@@ -130,13 +123,9 @@ export default function Page() {
             </span>
           </div>
         )}
-        <Button type="submit">
-          {isLoading ? (
-            form.formState.errors.root ? (
-              "Redirecting.."
-            ) : (
-              <LoadingComponent size={20} />
-            )
+        <Button disabled={form.formState.isSubmitting} type="submit">
+          {form.formState.isSubmitting ? (
+            <LoadingComponent size={20} />
           ) : (
             "Continue"
           )}

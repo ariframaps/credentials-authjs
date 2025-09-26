@@ -5,41 +5,56 @@ import { Button } from "@/components/ui/button";
 import { useSignUpStore } from "../../../../../lib/stores/signupStore";
 import { Input } from "@/components/ui/input";
 import LoadingComponent from "@/components/LoadingComponent";
-import { useState } from "react";
 import {
   resendVerifyEmailRequest,
   verifyEmailRequest,
 } from "@/lib/services/apiRequests";
 import { useRouter } from "next/navigation";
+import { FormsSchema } from "@/types/formsSchema";
+import z from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { InputComponent } from "@/components/InputComponent";
+
+const submitResetPasswordSchema = FormsSchema.pick({
+  code: true,
+  email: true,
+});
+type SubmitResetPasswordType = z.infer<typeof submitResetPasswordSchema>;
 
 export default function Page() {
   const router = useRouter();
   const formData = useSignUpStore((state) => state.formData);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [code, setCode] = useState<string>("");
+  // const [isLoading, setIsLoading] = useState<boolean>(false);
+  // const [code, setCode] = useState<string>("");
+  const form = useForm<SubmitResetPasswordType>({
+    resolver: zodResolver(submitResetPasswordSchema),
+  });
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
+  const onSubmit = async (data: SubmitResetPasswordType) => {
     if (!formData.email) {
       router.replace("/auth/sign-up/step-1");
       return;
     }
 
-    setIsLoading(true);
-    await verifyEmailRequest({ email: formData.email as string, code })
-      .then((res) => {
-        if (res.success) {
-          router.push("/auth/sign-in/step-1");
-        } else {
-          setIsLoading(false);
-          alert(res.errors);
-        }
-        return;
-      })
-      .catch(() => {
-        throw new Error("Something went wrong");
+    try {
+      const res = await verifyEmailRequest({
+        email: data.email,
+        code: data.code,
       });
+
+      if (res.success) {
+        router.push("/auth/sign-in/step-1");
+      } else {
+        form.setError("root", { type: "manual", message: res.errors });
+      }
+    } catch (err) {
+      console.error(err);
+      form.setError("root", {
+        type: "manual",
+        message: "Something went wrong. Please try again.",
+      });
+    }
   };
 
   const resendVerif = async () => {
@@ -48,22 +63,21 @@ export default function Page() {
       return;
     }
 
-    setIsLoading(true);
-    await resendVerifyEmailRequest({ email: formData.email as string })
-      .then((res) => {
-        if (res.success) {
-          alert("Verification email successfully resent");
-        } else {
-          setIsLoading(false);
-          alert(res.errors);
-        }
-        setIsLoading(false);
-        return;
-      })
-      .catch(() => {
-        setIsLoading(false);
-        throw new Error("Something went wrong");
+    try {
+      const res = await resendVerifyEmailRequest({ email: formData.email });
+
+      if (res.success) {
+        alert("Verification email successfully resent");
+      } else {
+        form.setError("root", { type: "manual", message: res.errors });
+      }
+    } catch (err) {
+      console.error(err);
+      form.setError("root", {
+        type: "manual",
+        message: "Something went wrong. Please try again.",
       });
+    }
   };
 
   return (
@@ -79,27 +93,55 @@ export default function Page() {
             confirm your account please input the code in the email we just
             sent.
           </p>
-          <form onSubmit={handleSubmit} className="">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="">
             <div className="">
-              <Input
-                className="mb-5"
-                onChange={(e) => setCode(e.target.value)}
-                type="text"
-                name="code"
-                id="code"
-                placeholder="Enter your code here"
-              />
+              <InputComponent
+                name={"email"}
+                label={"Email Address"}
+                isError={form.formState.errors.email ? true : false}
+                message={form.formState.errors.email?.message}>
+                <Input
+                  {...form.register("email")}
+                  type="text"
+                  name="email"
+                  isError={form.formState.errors.email ? true : false}
+                  id="email"
+                  placeholder="Enter your email address"
+                />
+              </InputComponent>
+              <InputComponent
+                name={"code"}
+                label={"code"}
+                isError={form.formState.errors.code ? true : false}
+                message={form.formState.errors.code?.message}>
+                <Input
+                  {...form.register("code")}
+                  type="text"
+                  name="code"
+                  isError={form.formState.errors.code ? true : false}
+                  id="code"
+                  placeholder="Enter your code here"
+                />
+              </InputComponent>
             </div>
-            <Button disabled={isLoading} type="submit">
-              {isLoading ? <LoadingComponent size={20} /> : "Verify"}
+            <Button disabled={form.formState.isSubmitting} type="submit">
+              {form.formState.isSubmitting ? (
+                <LoadingComponent size={20} />
+              ) : (
+                "Verify"
+              )}
             </Button>
           </form>
           <Button
             onClick={() => resendVerif()}
-            disabled={isLoading}
+            disabled={form.formState.isSubmitting}
             type="button"
             variant={"transparent"}>
-            {isLoading ? <LoadingComponent size={20} /> : "Resend"}
+            {form.formState.isSubmitting ? (
+              <LoadingComponent size={20} />
+            ) : (
+              "Resend"
+            )}
           </Button>
         </div>
       </section>

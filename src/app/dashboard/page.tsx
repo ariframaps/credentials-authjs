@@ -4,7 +4,7 @@ import Link from "next/link";
 import Overview from "./_components/Overview";
 import Latest from "./_components/Latest";
 
-export default async function Page() {
+export default function Page() {
   return (
     <div className={`${styles.container}`}>
       <div className={`${styles.content}`}>

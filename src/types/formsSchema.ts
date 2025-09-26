@@ -31,6 +31,7 @@ export const FormsSchema = z.object({
     .regex(/[0-9]/, "Password must include at least one number"),
 
   confirmPassword: z.string().min(1, "Please confirm your password"),
+  code: z.string().min(1, "Code must be filled"),
 });
 
 export type FormsForm = z.infer<typeof FormsSchema>;

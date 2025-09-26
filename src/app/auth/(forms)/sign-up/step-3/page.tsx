@@ -151,7 +151,7 @@ export default function Page() {
           </div>
         )}
         <Button disabled={form.formState.isSubmitting} type="submit">
-          {form.formState.errors ? (
+          {form.formState.isSubmitting ? (
             <LoadingComponent size={20} />
           ) : (
             "Create account"

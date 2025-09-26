@@ -7,7 +7,6 @@ const HOST = process.env.NEXT_PUBLIC_HOST_URL;
 export async function getOverviewRequest(): Promise<
   ApiResponse<Reservation[]>
 > {
-  console.log(HOST);
   try {
     const res = await fetch(`${HOST}/api/reservation/overview`, {
       method: "GET",

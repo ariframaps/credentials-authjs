@@ -35,7 +35,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         src="/auth-banner.png"
         alt="Go For Umrah"
         priority
-        quality={100}
         width={1251}
         height={800}
         sizes="(max-width: 800px) 35vw, 50vw"

@@ -52,12 +52,13 @@ export default function Page() {
       await Login(allSigninData);
       resetState();
     } catch (err) {
-      if (err instanceof Error && err.message === "Wrong password.") {
-        form.setError("root", {
-          type: "manual",
-          message: "Wrong password.",
-        });
-      }
+      const message =
+        err instanceof Error ? err.message : "Something went wrong";
+
+      form.setError("root", {
+        type: "manual",
+        message,
+      });
     }
   };
 

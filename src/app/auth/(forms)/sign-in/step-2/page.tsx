@@ -32,7 +32,6 @@ export default function Page() {
   });
 
   const onSubmit = async (data: SignInStep2Type) => {
-    console.log(data);
     if (!formData.email) {
       form.setError("root", { type: "manual", message: "Email is required" });
       setTimeout(() => {
@@ -42,21 +41,15 @@ export default function Page() {
     }
 
     try {
-      const allSigninData = { email: formData.email, password: data.password };
-
-      const res = await Login(allSigninData);
-
-      if (!res.ok) {
-        form.setError("root", { type: "manual", message: res.error });
-        return;
-      }
-
+      await Login({ email: formData.email, password: data.password });
       console.log("success");
       resetState();
       router.push("/dashboard");
       return;
     } catch (err) {
-      console.log(err);
+      if (err instanceof Error) {
+        form.setError("root", { type: "manual", message: err.message });
+      }
     }
   };
 

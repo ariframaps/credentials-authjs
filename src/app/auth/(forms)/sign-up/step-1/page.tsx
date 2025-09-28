@@ -12,10 +12,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useSignUpStore } from "@/lib/stores/signupStore";
-import { useEffect, useState } from "react";
-import { resendVerifyEmailRequest } from "@/lib/services/apiRequests";
+import { useEffect } from "react";
 import LoadingComponent from "@/components/LoadingComponent";
 import { XCircleIcon } from "lucide-react";
+import { checkIsEmailExits } from "@/lib/actions/checkIsEmailExists";
 
 const signUpStep1Schema = FormsSchema.pick({ email: true });
 type SignUpStep1Type = z.infer<typeof signUpStep1Schema>;
@@ -30,13 +30,10 @@ export default function Page() {
 
   const onSubmit = async (data: SignUpStep1Type) => {
     try {
-      const res = await resendVerifyEmailRequest({ email: data.email });
+      const isEmailExists = await checkIsEmailExits(data.email);
 
       // if email already exists
-      if (
-        res.success === true ||
-        res.errors === "Can't resend email code, because account was verified."
-      ) {
+      if (isEmailExists) {
         form.setError("email", {
           type: "manual",
           message: "Email already exists",
@@ -47,7 +44,6 @@ export default function Page() {
       setFormData({ email: data.email });
       router.push("/auth/sign-up/step-2");
     } catch (err) {
-      console.error(err);
       form.setError("root", {
         type: "manual",
         message: "Something went wrong. Please try again.",
@@ -57,7 +53,7 @@ export default function Page() {
 
   useEffect(() => {
     if (formData.email) form.setValue("email", formData.email);
-  }, [formData.email, form.setValue]);
+  }, [form, formData.email, form.setValue]);
 
   return (
     <div className={`${styles.container}`}>

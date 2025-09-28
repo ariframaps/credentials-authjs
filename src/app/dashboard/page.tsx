@@ -3,6 +3,8 @@ import styles from "./page.module.scss";
 import Link from "next/link";
 import Overview from "./_components/Overview";
 import Latest from "./_components/Latest";
+import { Suspense } from "react";
+import LoadingComponent from "@/components/LoadingComponent";
 
 export default function Page() {
   return (
@@ -15,7 +17,9 @@ export default function Page() {
           <HeaderButton />
         </div>
         {/* component */}
-        <Overview />
+        <Suspense fallback={<LoadingComponent size={25} />}>
+          <Overview />
+        </Suspense>
         {/* component */}
       </div>
       <div className={`${styles.content}`}>
@@ -26,7 +30,9 @@ export default function Page() {
           <HeaderButton />
         </div>
         {/* component */}
-        <Latest />
+        <Suspense fallback={<LoadingComponent size={25} />}>
+          <Latest />
+        </Suspense>
         {/* component */}
       </div>
     </div>

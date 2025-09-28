@@ -2,11 +2,9 @@ import "server-only";
 
 import { auth } from "@/auth";
 import { User } from "next-auth";
-import { redirect } from "next/navigation";
 
-export async function sessionCheck(): Promise<User> {
+export async function sessionCheck(): Promise<User | null> {
   const session = await auth();
-  if (!session || !session.user) return redirect("/auth");
-
+  if (!session || !session.user) return null;
   return session.user;
 }

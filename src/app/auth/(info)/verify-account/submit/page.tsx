@@ -2,13 +2,9 @@
 
 import styles from "@/styles/_infopage.module.scss";
 import { Button } from "@/components/ui/button";
-import { useSignUpStore } from "../../../../../lib/stores/signupStore";
+import { useSignUpStore } from "@/lib/stores/signupStore";
 import { Input } from "@/components/ui/input";
 import LoadingComponent from "@/components/LoadingComponent";
-import {
-  resendVerifyEmailRequest,
-  verifyEmailRequest,
-} from "@/lib/services/apiRequests";
 import { useRouter } from "next/navigation";
 import { FormsSchema } from "@/types/formsSchema";
 import z from "zod";
@@ -16,6 +12,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { InputComponent } from "@/components/InputComponent";
 import { XCircleIcon } from "lucide-react";
+import { verifyEmail } from "@/lib/actions/verifyEmail";
+import { resendEmailVerification } from "@/lib/actions/resendEmailVerification";
 
 const submitResetPasswordSchema = FormsSchema.pick({
   code: true,
@@ -26,8 +24,6 @@ type SubmitResetPasswordType = z.infer<typeof submitResetPasswordSchema>;
 export default function Page() {
   const router = useRouter();
   const formData = useSignUpStore((state) => state.formData);
-  // const [isLoading, setIsLoading] = useState<boolean>(false);
-  // const [code, setCode] = useState<string>("");
   const form = useForm<SubmitResetPasswordType>({
     resolver: zodResolver(submitResetPasswordSchema),
   });
@@ -39,23 +35,16 @@ export default function Page() {
     }
 
     try {
-      const res = await verifyEmailRequest({
-        email: data.email,
-        code: data.code,
-      });
-
-      if (res.success) {
-        alert("Account successfully verificated. please log-in to continue");
-        router.push("/auth/sign-in/step-1");
-      } else {
-        form.setError("root", { type: "manual", message: res.errors });
-      }
+      await verifyEmail(data.email, data.code);
+      alert("Account successfully verificated. please log-in to continue");
+      router.push("/auth/sign-in/step-1");
     } catch (err) {
-      console.error(err);
-      form.setError("root", {
-        type: "manual",
-        message: "Something went wrong. Please try again.",
-      });
+      if (err instanceof Error) {
+        form.setError("root", {
+          type: "manual",
+          message: err.message,
+        });
+      }
     }
   };
 
@@ -66,19 +55,15 @@ export default function Page() {
     }
 
     try {
-      const res = await resendVerifyEmailRequest({ email: formData.email });
-
-      if (res.success) {
-        alert("Verification email successfully resent");
-      } else {
-        form.setError("root", { type: "manual", message: res.errors });
-      }
+      await resendEmailVerification(formData.email);
+      alert("Verification email successfully resent");
     } catch (err) {
-      console.error(err);
-      form.setError("root", {
-        type: "manual",
-        message: "Something went wrong. Please try again.",
-      });
+      if (err instanceof Error) {
+        form.setError("root", {
+          type: "manual",
+          message: err.message,
+        });
+      }
     }
   };
 

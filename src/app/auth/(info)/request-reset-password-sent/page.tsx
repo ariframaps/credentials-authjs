@@ -1,15 +1,10 @@
-"use client";
-
 import Image from "next/image";
 import styles from "@/styles/_infopage.module.scss";
 import { Button } from "@/components/ui/button";
-import { useSignInStore } from "../../../../lib/stores/signinStore";
-import { censorEmail } from "@/lib/cencorEmail";
 import Link from "next/link";
+import ShowEmail from "@/components/ShowEmail";
 
 export default function Page() {
-  const formData = useSignInStore((state) => state.formData);
-
   return (
     <main className={`${styles.main}`}>
       <section className={`${styles.main__container}`}>
@@ -25,10 +20,8 @@ export default function Page() {
           </h1>
           <p className="text-[16px] font-normal text-neutral-secondary">
             We just emailed instructions and a reset password link to{" "}
-            <span className="font-semibold">
-              {censorEmail(formData.email || "")}
-            </span>
-            . It might take a few minutes to arrive.
+            <ShowEmail isCencored={true} />. It might take a few minutes to
+            arrive.
           </p>
         </div>
         <div className={`${styles.main__container__button}`}>

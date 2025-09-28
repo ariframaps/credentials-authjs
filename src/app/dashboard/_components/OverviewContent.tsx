@@ -1,4 +1,5 @@
 "use client";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import OverviewItem from "./OverviewItem";
 import Message from "@/components/Message";
@@ -15,7 +16,9 @@ export default function OverviewContent({
       defaultValue="Departure"
       className={`${styles.container} bg-neutral-white rounded-[16px] divide-y-[1px] divide-neutral-separator`}>
       <TabsList>
-        <TabsTrigger value="Departure">Departure</TabsTrigger>
+        <TabsTrigger disabled value="Departure">
+          Departure
+        </TabsTrigger>
         <TabsTrigger value="Arrival">
           <div className="flex items-center gap-[8px] ">
             Arrival

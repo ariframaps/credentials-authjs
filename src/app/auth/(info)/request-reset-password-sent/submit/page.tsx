@@ -4,7 +4,6 @@ import styles from "@/styles/_infopage.module.scss";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import LoadingComponent from "@/components/LoadingComponent";
-import { resetPasswordRequest } from "@/lib/services/apiRequests";
 import { useRouter } from "next/navigation";
 import { FormsSchema } from "@/types/formsSchema";
 import { z } from "zod";
@@ -13,6 +12,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { InputComponent } from "@/components/InputComponent";
 import Link from "next/link";
 import { XCircleIcon } from "lucide-react";
+import { resetPassword } from "@/lib/actions/resetPassword";
 
 const submitResetPasswordSchema = FormsSchema.pick({
   code: true,
@@ -39,24 +39,17 @@ export default function Page() {
     }
 
     try {
-      const res = await resetPasswordRequest({
-        email: data.email,
-        new_password: data.password,
-        code: data.code,
-      });
-
-      if (res.success) {
-        alert("Successfully created new password. please log-in to continue");
-        router.push("/auth/sign-in/step-1");
-      } else {
-        form.setError("root", { type: "manual", message: res.errors });
-      }
+      await resetPassword(data.email, data.password, data.code);
+      alert("Successfully created new password. please log-in to continue");
+      router.push("/auth/sign-in/step-1");
+      return;
     } catch (err) {
-      console.error(err);
-      form.setError("root", {
-        type: "manual",
-        message: "Something went wrong. Please try again.",
-      });
+      if (err instanceof Error) {
+        form.setError("root", {
+          type: "manual",
+          message: err.message,
+        });
+      }
     }
   };
 

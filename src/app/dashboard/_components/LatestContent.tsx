@@ -1,4 +1,5 @@
 "use client";
+
 import styles from "./Latest.module.scss";
 import LatestItem from "./LatestItem";
 import { LatestBooking } from "@/types/dummyTypes";

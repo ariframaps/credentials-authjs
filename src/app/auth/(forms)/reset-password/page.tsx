@@ -12,47 +12,35 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSignInStore } from "../../../../lib/stores/signinStore";
-import { useEffect } from "react";
-import { forgotPasswordRequest } from "@/lib/services/apiRequests";
 import { XCircleIcon } from "lucide-react";
 import LoadingComponent from "@/components/LoadingComponent";
+import { requestResetPassword } from "@/lib/actions/resetPassword";
 
 const resetPasswordSchema = FormsSchema.pick({
   email: true,
 });
-
 type ResetPasswordType = z.infer<typeof resetPasswordSchema>;
 
 export default function Page() {
   const router = useRouter();
-  const formData = useSignInStore((state) => state.formData);
-
   const form = useForm<ResetPasswordType>({
     resolver: zodResolver(resetPasswordSchema),
   });
 
   const onSubmit = async (data: ResetPasswordType) => {
     try {
-      const res = await forgotPasswordRequest({ email: data.email });
-
-      if (res.success) {
-        router.push("/auth/request-reset-password-sent");
-      } else {
-        form.setError("root", { type: "manual", message: res.errors });
-      }
+      await requestResetPassword(data.email);
+      router.push("/auth/request-reset-password-sent");
+      return;
     } catch (err) {
-      console.error(err);
-      form.setError("root", {
-        type: "manual",
-        message: "Something went wrong",
-      });
+      if (err instanceof Error) {
+        form.setError("root", {
+          type: "manual",
+          message: err.message,
+        });
+      }
     }
   };
-
-  useEffect(() => {
-    form.setValue("email", formData.email || "");
-  }, [form, formData.email]);
 
   return (
     <div className={`${styles.container}`}>

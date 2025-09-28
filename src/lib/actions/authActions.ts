@@ -1,20 +1,14 @@
 "use server";
 
-import z from "zod";
 import { signIn, signOut } from "@/auth";
-import {
-  signInRequestBody,
-  signUpRequest,
-  signUpRequestBody,
-} from "../services/apiRequests";
+import { signUpRequest } from "../services/apiRequests";
 import { CredentialsSignin } from "next-auth";
-import { redirect } from "next/navigation";
+import {
+  SigninRequestBody,
+  SignupRequestBody,
+} from "@/types/apiRequestBodyTypes";
 
-type LoginType = z.infer<typeof signInRequestBody>;
-
-export async function Login(
-  form: LoginType
-): Promise<{ ok: boolean; error: string | undefined }> {
+export async function Login(form: SigninRequestBody): Promise<boolean> {
   try {
     await signIn("credentials", {
       redirect: false,
@@ -22,30 +16,18 @@ export async function Login(
     });
   } catch (error) {
     const someError = error as CredentialsSignin;
-    console.log("singin error ", someError.cause);
-    return {
-      ok: false,
-      error: someError.cause?.err?.message,
-    };
+    console.error("singin error ", someError.cause);
+    throw new Error(someError.cause?.err?.message);
   }
-  return {
-    ok: true,
-    error: undefined,
-  };
+  return true;
 }
 
 export async function Logout() {
   return signOut({ redirectTo: "/auth" });
 }
 
-type SignupType = z.infer<typeof signUpRequestBody>;
-
-export async function createAccount(form: SignupType) {
+export async function createAccount(form: SignupRequestBody) {
   const res = await signUpRequest(form);
-
-  if (!res.success) {
-    throw new Error(res.errors || "Signup failed");
-  }
-
+  if (!res.success) throw new Error(res.errors);
   return true;
 }

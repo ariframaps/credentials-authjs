@@ -1,14 +1,10 @@
-"use client";
-
 import Image from "next/image";
 import styles from "@/styles/_infopage.module.scss";
 import { Button } from "@/components/ui/button";
-import { useSignUpStore } from "../../../../lib/stores/signupStore";
 import Link from "next/link";
+import ShowEmail from "@/components/ShowEmail";
 
 export default function Page() {
-  const formData = useSignUpStore((state) => state.formData);
-
   return (
     <div className={`${styles.main}`}>
       <section className={`${styles.main__container}`}>
@@ -24,9 +20,8 @@ export default function Page() {
           </h1>
           <p className="text-[16px] font-normal text-neutral-secondary">
             We sent you an email with a verification link to{" "}
-            <span className="font-semibold">{formData.email || ""}</span>. To
-            confirm your account please follow the link in the email we just
-            sent.
+            <ShowEmail isCencored={false} />. To confirm your account please
+            follow the link in the email we just sent.
           </p>
         </div>
         <div className={`${styles.main__container__button}`}>

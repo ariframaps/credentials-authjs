@@ -1,8 +1,9 @@
+import "server-only";
+
 import { ApiResponse } from "@/types/apiResponseTypes";
 import { LatestBooking, Reservation } from "@/types/dummyTypes";
-import { User } from "next-auth";
 
-const HOST = process.env.NEXT_PUBLIC_HOST_URL;
+const HOST = process.env.HOST_URL;
 
 export async function getOverviewRequest(): Promise<
   ApiResponse<Reservation[]>
@@ -37,29 +38,7 @@ export async function getLatestRequest(): Promise<
         "Content-Type": "application/json",
       },
     });
-
     const data: ApiResponse<LatestBooking[]> = await res.json();
-    return data;
-  } catch (error) {
-    console.error(error);
-    return {
-      errors: "Something went wrong. Please try again later.",
-      success: false,
-      status_code: 500,
-    };
-  }
-}
-
-export async function getUserInfoRequest(): Promise<ApiResponse<User>> {
-  try {
-    const res = await fetch(`${HOST}/api/user`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    const data: ApiResponse<User> = await res.json();
     return data;
   } catch (error) {
     console.error(error);

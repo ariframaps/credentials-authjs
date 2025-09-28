@@ -12,15 +12,14 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSignInStore } from "@/lib/stores/signinStore";
-import { useEffect, useState } from "react";
-import { resendVerifyEmailRequest } from "@/lib/services/apiRequests";
+import { useEffect } from "react";
 import LoadingComponent from "@/components/LoadingComponent";
 import { XCircleIcon } from "lucide-react";
+import { checkIsEmailExits } from "@/lib/actions/checkIsEmailExists";
 
 const signInStep1Schema = FormsSchema.pick({
   email: true,
 });
-
 type SignInStep1Type = z.infer<typeof signInStep1Schema>;
 
 export default function Page() {
@@ -33,35 +32,30 @@ export default function Page() {
 
   const onSubmit = async (data: SignInStep1Type) => {
     try {
-      const res = await resendVerifyEmailRequest({ email: data.email });
+      const exists = await checkIsEmailExits(data.email);
 
-      if (res.success === true) {
-        form.setError("email", { type: "manual", message: "Email not found" });
-        return;
-      }
-
-      if (
-        res.success === false &&
-        res.errors !== "Can't resend email code, because account was verified."
-      ) {
-        form.setError("email", { type: "manual", message: "Email not found" });
+      if (!exists) {
+        form.setError("email", {
+          type: "manual",
+          message: "Email not found or not verified",
+        });
         return;
       }
 
       setFormData({ email: data.email });
       router.push("/auth/sign-in/step-2");
+      return;
     } catch (err) {
-      console.error(err);
       form.setError("root", {
         type: "manual",
-        message: "Something went wrong",
+        message: "Something went wrong, please try again",
       });
     }
   };
 
   useEffect(() => {
     if (formData.email) form.setValue("email", formData.email);
-  }, [formData.email, form.setValue]);
+  }, [form, formData.email, form.setValue]);
 
   return (
     <div className={`${styles.container}`}>

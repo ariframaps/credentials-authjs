@@ -22,8 +22,8 @@ import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useSignUpStore } from "@/lib/stores/signupStore";
-import { resendVerifyEmailRequest } from "@/lib/services/apiRequests";
 import LoadingComponent from "@/components/LoadingComponent";
+import { checkIsUsernameExists } from "@/lib/actions/checkIsUsernameExists";
 
 const signUpStep2Schema = FormsSchema.pick({
   firstname: true,
@@ -59,15 +59,12 @@ export default function Page() {
     }
 
     try {
-      const res = await resendVerifyEmailRequest({ email: data.username });
+      const isUsernameTaken = await checkIsUsernameExists(data.username);
 
-      if (
-        res.success === true ||
-        res.errors === "Can't resend email code, because account was verified."
-      ) {
+      if (isUsernameTaken) {
         form.setError("username", {
           type: "manual",
-          message: "Username already taken",
+          message: "Username is already taken",
         });
         return;
       }
@@ -83,7 +80,6 @@ export default function Page() {
 
       router.push("/auth/sign-up/step-3");
     } catch (err) {
-      console.error(err);
       form.setError("root", {
         type: "manual",
         message: "Something went wrong. Please try again.",
@@ -99,7 +95,7 @@ export default function Page() {
       phone: formData.phone || "",
     });
     setCountryCode(formData.countryCode || "");
-  }, [formData, form.reset]);
+  }, [form, formData, form.reset]);
 
   return (
     <div className={`${styles.container}`}>

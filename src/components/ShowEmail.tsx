@@ -1,4 +1,9 @@
-export function censorEmail(email: string): string {
+"use client";
+
+import { useSignInStore } from "@/lib/stores/signinStore";
+import React from "react";
+
+function censorEmail(email: string): string {
   const [user, domain] = email.split("@");
   if (!domain) return email; // not a valid email
 
@@ -12,3 +17,15 @@ export function censorEmail(email: string): string {
 
   return `${userMasked}@${domainMasked}.${tldParts.join(".")}`;
 }
+
+const ShowEmail = ({ isCencored }: { isCencored: boolean }) => {
+  const formData = useSignInStore((state) => state.formData);
+
+  return (
+    <span className="font-semibold">
+      {isCencored ? censorEmail(formData.email || "") : formData.email || ""}
+    </span>
+  );
+};
+
+export default ShowEmail;

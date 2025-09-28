@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import HeaderUserInfo from "./HeaderUserInfo";
+import { Suspense } from "react";
+import LoadingComponent from "@/components/LoadingComponent";
 
 const Header = () => {
   return (
@@ -64,7 +66,9 @@ const Header = () => {
         </div>
 
         <div className={`${styles.right__userDetails}`}>
-          <HeaderUserInfo />
+          <Suspense fallback={<LoadingComponent size={20} />}>
+            <HeaderUserInfo />
+          </Suspense>
         </div>
       </div>
     </header>

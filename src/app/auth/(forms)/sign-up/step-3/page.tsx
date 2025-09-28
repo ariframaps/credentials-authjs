@@ -12,12 +12,11 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useState } from "react";
 import { useSignUpStore } from "@/lib/stores/signupStore";
 import { createAccount } from "@/lib/actions/authActions";
-import { signUpRequestBody } from "@/lib/services/apiRequests";
 import { XCircleIcon } from "lucide-react";
 import LoadingComponent from "@/components/LoadingComponent";
+import { SignupRequestBody } from "@/types/apiRequestBodyTypes";
 
 const signUpStep3Schema = FormsSchema.pick({
   password: true,
@@ -64,14 +63,15 @@ export default function Page() {
     };
 
     try {
-      await createAccount(allSignupData as z.infer<typeof signUpRequestBody>);
+      await createAccount(allSignupData as SignupRequestBody);
       router.push("/auth/verify-account");
     } catch (err) {
-      console.error(err);
-      form.setError("root", {
-        type: "manual",
-        message: "Failed to create account. Please try again.",
-      });
+      if (err instanceof Error) {
+        form.setError("root", {
+          type: "manual",
+          message: err.message,
+        });
+      }
     }
   };
 

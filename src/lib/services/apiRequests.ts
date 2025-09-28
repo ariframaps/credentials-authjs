@@ -1,20 +1,19 @@
+import "server-only";
+
 import { ApiResponse } from "@/types/apiResponseTypes";
-import { FormsSchema } from "@/types/formsSchema";
-import z from "zod";
+import {
+  ForgotPasswordRequestBody,
+  ResendVerifyEmailRequestBody,
+  ResetPasswordRequestBody,
+  SigninRequestBody,
+  SignupRequestBody,
+  VerifyEmailRequestBody,
+} from "@/types/apiRequestBodyTypes";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = process.env.API_URL;
 
-// SIGN UP
-export const signUpRequestBody = FormsSchema.pick({
-  email: true,
-  firstname: true,
-  lastname: true,
-  username: true,
-  phone: true,
-  password: true,
-});
 export async function signUpRequest(
-  form: z.infer<typeof signUpRequestBody>
+  form: SignupRequestBody
 ): Promise<ApiResponse<string>> {
   try {
     const res = await fetch(`${API_URL}/store`, {
@@ -27,7 +26,8 @@ export async function signUpRequest(
 
     const data: ApiResponse<string> = await res.json();
     return data;
-  } catch (_error) {
+  } catch (error) {
+    console.error(error);
     return {
       errors: "Something went wrong. Please try again later.",
       success: false,
@@ -36,13 +36,8 @@ export async function signUpRequest(
   }
 }
 
-// SIGN IN
-export const signInRequestBody = FormsSchema.pick({
-  email: true,
-  password: true,
-});
 export async function signInRequest(
-  form: z.infer<typeof signInRequestBody>
+  form: SigninRequestBody
 ): Promise<ApiResponse<{ id: number; email: string; token: string }>> {
   try {
     const res = await fetch(`${API_URL}/login`, {
@@ -56,7 +51,8 @@ export async function signInRequest(
     const data: ApiResponse<{ id: number; email: string; token: string }> =
       await res.json();
     return data;
-  } catch (_error) {
+  } catch (error) {
+    console.error(error);
     return {
       errors: "Something went wrong. Please try again later.",
       success: false,
@@ -66,10 +62,9 @@ export async function signInRequest(
 }
 
 // VERIFY EMAIL
-export async function verifyEmailRequest(form: {
-  email: string;
-  code: string;
-}): Promise<ApiResponse<string>> {
+export async function verifyEmailRequest(
+  form: VerifyEmailRequestBody
+): Promise<ApiResponse<string>> {
   try {
     const res = await fetch(`${API_URL}/email-verification/verify`, {
       method: "POST",
@@ -81,7 +76,8 @@ export async function verifyEmailRequest(form: {
 
     const data: ApiResponse<string> = await res.json();
     return data;
-  } catch (_error) {
+  } catch (error) {
+    console.error(error);
     return {
       errors: "Something went wrong. Please try again later.",
       success: false,
@@ -90,12 +86,8 @@ export async function verifyEmailRequest(form: {
   }
 }
 
-// RESEND VERIFICATION MAIL
-export const resendVerifyEmailRequestBody = FormsSchema.pick({
-  email: true,
-});
 export async function resendVerifyEmailRequest(
-  form: z.infer<typeof resendVerifyEmailRequestBody>
+  form: ResendVerifyEmailRequestBody
 ): Promise<ApiResponse<string>> {
   try {
     const res = await fetch(`${API_URL}/email-verification/resend`, {
@@ -108,7 +100,8 @@ export async function resendVerifyEmailRequest(
 
     const data: ApiResponse<string> = await res.json();
     return data;
-  } catch (_error) {
+  } catch (error) {
+    console.error(error);
     return {
       errors: "Something went wrong. Please try again later.",
       success: false,
@@ -117,12 +110,8 @@ export async function resendVerifyEmailRequest(
   }
 }
 
-// FOREGET PASSWORD
-export const forgotPasswordRequestBody = FormsSchema.pick({
-  email: true,
-});
 export async function forgotPasswordRequest(
-  form: z.infer<typeof forgotPasswordRequestBody>
+  form: ForgotPasswordRequestBody
 ): Promise<ApiResponse<string>> {
   try {
     const res = await fetch(`${API_URL}/forgot-password/request`, {
@@ -135,7 +124,8 @@ export async function forgotPasswordRequest(
 
     const data: ApiResponse<string> = await res.json();
     return data;
-  } catch (_error) {
+  } catch (error) {
+    console.error(error);
     return {
       errors: "Something went wrong. Please try again later.",
       success: false,
@@ -144,23 +134,22 @@ export async function forgotPasswordRequest(
   }
 }
 
-export async function resetPasswordRequest(form: {
-  email: string;
-  code: string;
-  new_password: string;
-}): Promise<ApiResponse<string>> {
+export async function resetPasswordRequest(
+  form: ResetPasswordRequestBody
+): Promise<ApiResponse<string>> {
   try {
     const res = await fetch(`${API_URL}/forgot-password/submit`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(form),
+      body: JSON.stringify({ ...form, new_password: form.password }),
     });
 
     const data: ApiResponse<string> = await res.json();
     return data;
-  } catch (_error) {
+  } catch (error) {
+    console.error(error);
     return {
       errors: "Something went wrong. Please try again later.",
       success: false,

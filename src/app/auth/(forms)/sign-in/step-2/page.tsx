@@ -13,11 +13,14 @@ import { XCircleIcon } from "lucide-react";
 import LoadingComponent from "@/components/LoadingComponent";
 import { useActionState, useEffect } from "react";
 import { signInStep2Action } from "@/lib/actions/form/signInStep2Action";
+import { useSignUpStore } from "@/lib/stores/signupStore";
 
 export default function Page() {
 	const router = useRouter();
 	const formData = useSignInStore((state) => state.formData);
-	const resetState = useSignInStore((state) => state.reset);
+	const resetSignInState = useSignInStore((state) => state.reset);
+	const resetSignUpState = useSignUpStore((state) => state.reset);
+
 	const [state, formAction, isPending] = useActionState(
 		signInStep2Action,
 		null
@@ -25,18 +28,17 @@ export default function Page() {
 
 	useEffect(() => {
 		if (!state?.success && state?.errors.email) {
-			console.log("redirecting to email field...");
 			setTimeout(() => {
 				return router.replace("/auth/sign-in/step-1");
-			}, 2000);
+			}, 3000);
 		}
 
 		if (state?.success) {
-			console.log("success");
-			resetState();
+			resetSignInState();
+			resetSignUpState();
 			router.push("/dashboard");
 		}
-	}, [state, state?.success, router]);
+	}, [state, state?.success, router, resetSignInState, resetSignUpState]);
 
 	return (
 		<div className={`${styles.container}`}>
@@ -66,7 +68,7 @@ export default function Page() {
 				<div className={`${styles.container__form__inputs}`}>
 					{/* password*/}
 					<input
-						type="text"
+						type="hidden"
 						hidden
 						name="email"
 						defaultValue={formData.email ?? ""}
@@ -85,7 +87,9 @@ export default function Page() {
 						<Input
 							type="password"
 							name="password"
-							defaultValue={state?.password ?? ""}
+							defaultValue={
+								state?.success ? "" : state?.password ?? ""
+							}
 							isError={
 								!!state?.success
 									? false

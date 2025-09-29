@@ -8,7 +8,7 @@ const signInStep2Schema = FormsSchema.pick({ password: true });
 type SignInStep2Schema = z.infer<typeof signInStep2Schema>;
 
 type SignInStep2Result =
-	| ({ success: true } & SignInStep2Schema)
+	| { success: true }
 	| ({ success: false; errors: Record<string, string> } & SignInStep2Schema);
 
 export async function signInStep2Action(
@@ -17,8 +17,8 @@ export async function signInStep2Action(
 ): Promise<SignInStep2Result> {
 	console.log(prevState);
 
-	const email = formData.get("email") as string;
-	const password = formData.get("password") as string;
+	const email = (formData.get("email") as string) || "";
+	const password = (formData.get("password") as string) || "";
 
 	// check is email exist in form
 	if (!formData.get("email")) {
@@ -27,7 +27,7 @@ export async function signInStep2Action(
 			password: password ?? "",
 			errors: {
 				email: "no email",
-				root: "Email is required! Go back to email field.",
+				root: "Email is required! redirecting..",
 			},
 		};
 	}
@@ -50,14 +50,15 @@ export async function signInStep2Action(
 		await Login({ email, password });
 		return {
 			success: true,
-			password: password ?? "",
 		};
 	} catch (err) {
-		console.error(err);
+		let message = "Something went wrong, please try again.";
+		if (err instanceof Error) message = err.message;
+
 		return {
 			success: false,
 			password: password ?? "",
-			errors: { root: (err as any).message },
+			errors: { root: message },
 		};
 	}
 }

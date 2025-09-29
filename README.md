@@ -60,11 +60,11 @@ NEXTAUTH_URL=http://localhost:3000
 
 ## API Base URL
 
-NEXT_PUBLIC_API_URL=https://goforumrah-api.illiyin.studio/api
+API_URL=(API url)
 
-## NEXT_PUBLIC_HOST_URL ((host url))
+## HOST_URL ((host url))
 
-NEXT_PUBLIC_HOST_URL=http://localhost:3000
+HOST_URL=http://localhost:3000
 
 👉 Generate a secure secret for NextAuth:
 

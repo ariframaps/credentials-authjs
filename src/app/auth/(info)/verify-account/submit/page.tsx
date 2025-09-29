@@ -30,7 +30,7 @@ export default function Page() {
 
   const onSubmit = async (data: SubmitResetPasswordType) => {
     if (!formData.email) {
-      router.replace("/auth/sign-up/step-1");
+      router.push("/auth/sign-up/step-1");
       return;
     }
 

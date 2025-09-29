@@ -7,123 +7,118 @@ import { InputComponent } from "@/components/InputComponent";
 import FormHeader from "@/components/FormHeader";
 import Link from "next/link";
 import LeftArrow from "@/components/svg/LeftArrow";
-import { FormsSchema } from "@/types/formsSchema";
-import { z } from "zod";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useSignInStore } from "@/lib/stores/signinStore";
-import { Login } from "@/lib/actions/authActions";
 import { XCircleIcon } from "lucide-react";
 import LoadingComponent from "@/components/LoadingComponent";
-
-const signInStep2Schema = FormsSchema.pick({
-  password: true,
-});
-
-type SignInStep2Type = z.infer<typeof signInStep2Schema>;
+import { useActionState, useEffect } from "react";
+import { signInStep2Action } from "@/lib/actions/form/signInStep2Action";
 
 export default function Page() {
-  const router = useRouter();
-  const formData = useSignInStore((state) => state.formData);
-  const resetState = useSignInStore((state) => state.reset);
-  const form = useForm<SignInStep2Type>({
-    resolver: zodResolver(signInStep2Schema),
-  });
+	const router = useRouter();
+	const formData = useSignInStore((state) => state.formData);
+	const resetState = useSignInStore((state) => state.reset);
+	const [state, formAction, isPending] = useActionState(
+		signInStep2Action,
+		null
+	);
 
-  const onSubmit = async (data: SignInStep2Type) => {
-    if (!formData.email) {
-      form.setError("root", { type: "manual", message: "Email is required" });
-      setTimeout(() => {
-        router.replace("/auth/sign-in/step-1");
-      }, 3000);
-      return;
-    }
+	useEffect(() => {
+		if (!state?.success && state?.errors.email) {
+			console.log("redirecting to email field...");
+			setTimeout(() => {
+				return router.replace("/auth/sign-in/step-1");
+			}, 2000);
+		}
 
-    try {
-      await Login({ email: formData.email, password: data.password });
-      console.log("success");
-      resetState();
-      router.push("/dashboard");
-      return;
-    } catch (err) {
-      if (err instanceof Error) {
-        form.setError("root", { type: "manual", message: err.message });
-      }
-    }
-  };
+		if (state?.success) {
+			console.log("success");
+			resetState();
+			router.push("/dashboard");
+		}
+	}, [state, state?.success, router]);
 
-  return (
-    <div className={`${styles.container}`}>
-      {/* back to previous step button */}
-      <Link
-        href={"/auth/sign-in/step-1"}
-        className={`${styles.container__backBtn} text-neutral-primary font-semibold text-[18px]`}>
-        <LeftArrow
-          className="text-brand-green-color-01"
-          width={20}
-          height={20}
-          viewBox="0 0 20 20"
-        />
-        Back
-      </Link>
+	return (
+		<div className={`${styles.container}`}>
+			{/* back to previous step button */}
+			<Link
+				href={"/auth/sign-in/step-1"}
+				className={`${styles.container__backBtn} text-neutral-primary font-semibold text-[18px]`}>
+				<LeftArrow
+					className="text-brand-green-color-01"
+					width={20}
+					height={20}
+					viewBox="0 0 20 20"
+				/>
+				Back
+			</Link>
 
-      {/* header */}
-      <div className={`${styles.container__header}`}>
-        <FormHeader
-          title={"Enter your password"}
-          subtitle={`Enter your password for ${formData.email || ""}`}
-        />
-      </div>
+			{/* header */}
+			<div className={`${styles.container__header}`}>
+				<FormHeader
+					title={"Enter your password"}
+					subtitle={`Enter your password for ${formData.email || ""}`}
+				/>
+			</div>
 
-      {/* form */}
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className={`${styles.container__form}`}>
-        <div className={`${styles.container__form__inputs}`}>
-          {/* password*/}
-          <InputComponent
-            name={"password"}
-            label={"Password"}
-            isError={form.formState.errors.password ? true : false}
-            message={form.formState.errors.password?.message}>
-            <Input
-              {...form.register("password")}
-              type="password"
-              name="password"
-              isError={form.formState.errors.password ? true : false}
-              id="password"
-              placeholder="Enter your password"
-            />
-          </InputComponent>
-        </div>
-        <Link
-          href={"/auth/reset-password"}
-          className="text-brand-green-color-01 text-[16px] font-semibold ">
-          Forgot Password ?
-        </Link>
-        {form.formState.errors.root && (
-          <div
-            className={`${styles.container__form__info} bg-red-50 border-l-[6px] border-text-danger-tertiary rounded-[8px]`}>
-            <XCircleIcon
-              width={28}
-              height={28}
-              className="text-text-danger-tertiary"
-            />
-            <span className="text-[12px] font-normal text-red-800">
-              {form.formState.errors.root?.message}
-            </span>
-          </div>
-        )}
-        <Button disabled={form.formState.isSubmitting} type="submit">
-          {form.formState.isSubmitting ? (
-            <LoadingComponent size={20} />
-          ) : (
-            "Continue"
-          )}
-        </Button>
-        <span className="w-full block h-[1px] bg-neutral-separator"></span>
-      </form>
-    </div>
-  );
+			{/* form */}
+			<form action={formAction} className={`${styles.container__form}`}>
+				<div className={`${styles.container__form__inputs}`}>
+					{/* password*/}
+					<input
+						type="text"
+						hidden
+						name="email"
+						defaultValue={formData.email ?? ""}
+					/>
+					<InputComponent
+						name={"password"}
+						label={"Password"}
+						isError={
+							!!state?.success ? false : !!state?.errors.password
+						}
+						message={
+							state?.success
+								? undefined
+								: (state?.errors?.password as string)
+						}>
+						<Input
+							type="password"
+							name="password"
+							defaultValue={state?.password ?? ""}
+							isError={
+								!!state?.success
+									? false
+									: !!state?.errors.password
+							}
+							id="password"
+							placeholder="Enter your password"
+						/>
+					</InputComponent>
+				</div>
+				<Link
+					href={"/auth/reset-password"}
+					className="text-brand-green-color-01 text-[16px] font-semibold ">
+					Forgot Password ?
+				</Link>
+				{!state?.success && state?.errors.root && (
+					<div
+						className={`${styles.container__form__info} bg-red-50 border-l-[6px] border-text-danger-tertiary rounded-[8px]`}>
+						<XCircleIcon
+							width={28}
+							height={28}
+							className="text-text-danger-tertiary"
+						/>
+						<span className="text-[12px] font-normal text-red-800">
+							{state.errors.root}
+						</span>
+					</div>
+				)}
+				<Button disabled={isPending} type="submit">
+					{isPending ? <LoadingComponent size={20} /> : "Continue"}
+				</Button>
+				<span className="w-full block h-[1px] bg-neutral-separator"></span>
+			</form>
+		</div>
+	);
 }

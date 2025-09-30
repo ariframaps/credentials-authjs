@@ -15,14 +15,11 @@ export async function signInStep1Action(
 	prevState: SignInStep1Result | null,
 	formData: FormData
 ): Promise<SignInStep1Result> {
-	console.log("prevState:", prevState);
-
 	const parsed = signInStep1Schema.safeParse({
 		email: formData.get("email") || "",
 	});
 
 	if (!parsed.success) {
-		console.log(parsed.error.issues);
 		return {
 			success: false,
 			email: (formData.get("email") as string) ?? "",

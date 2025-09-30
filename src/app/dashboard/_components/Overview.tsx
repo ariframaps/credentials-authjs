@@ -1,57 +1,60 @@
 import styles from "./Overview.module.scss";
 import Message from "@/components/Message";
-import { getOverview } from "@/lib/actions/getReservation";
 import OverviewItem from "./OverviewItem";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import getUser from "@/lib/actions/getUser";
+import { ReservationsDummyData as overview } from "@/dummydata/reservations";
 
 export default async function Overview() {
-  try {
-    const overview = await getOverview();
-    return (
-      <Tabs
-        defaultValue="Departure"
-        className={`${styles.container} bg-neutral-white rounded-[16px] divide-y-[1px] divide-neutral-separator`}>
-        <TabsList>
-          <TabsTrigger value="Departure">Departure</TabsTrigger>
-          <TabsTrigger value="Arrival">
-            <div className="flex items-center gap-[8px] ">
-              Arrival
-              <span className="flex justify-center items-center size-[20px] rounded-full bg-brand-green-color-01 text-neutral-white font-semibold text-[12px] ">
-                1
-              </span>
-            </div>
-          </TabsTrigger>
-          <TabsTrigger value="Stay-over">Stay-over</TabsTrigger>
-        </TabsList>
+	try {
+		const user = await getUser();
+		if (!user) throw new Error("Unauthorized");
 
-        <TabsContent
-          value="Departure"
-          className="divide-y-[1px] divide-neutral-separator">
-          {overview
-            .filter((item) => item.type === "departure")
-            .map((item, i) => (
-              <OverviewItem key={i} reservation={item} />
-            ))}
-        </TabsContent>
+		return (
+			<Tabs
+				defaultValue="Departure"
+				className={`${styles.container} bg-neutral-white rounded-[16px] divide-y-[1px] divide-neutral-separator`}>
+				<TabsList>
+					<TabsTrigger value="Departure">Departure</TabsTrigger>
+					<TabsTrigger value="Arrival">
+						<div className="flex items-center gap-[8px] ">
+							Arrival
+							<span className="flex justify-center items-center size-[20px] rounded-full bg-brand-green-color-01 text-neutral-white font-semibold text-[12px] ">
+								1
+							</span>
+						</div>
+					</TabsTrigger>
+					<TabsTrigger value="Stay-over">Stay-over</TabsTrigger>
+				</TabsList>
 
-        <TabsContent value="Arrival">
-          {overview
-            .filter((item) => item.type === "arrival")
-            .map((item, i) => (
-              <OverviewItem key={i} reservation={item} />
-            ))}
-        </TabsContent>
+				<TabsContent
+					value="Departure"
+					className="divide-y-[1px] divide-neutral-separator">
+					{overview
+						.filter((item) => item.type === "departure")
+						.map((item, i) => (
+							<OverviewItem key={i} reservation={item} />
+						))}
+				</TabsContent>
 
-        <TabsContent value="Stay-over">
-          <Message message="No stay-over reservation" />
-        </TabsContent>
-      </Tabs>
-    );
-  } catch (error) {
-    return (
-      <div className="h-[30vh]">
-        <Message message={(error as Error).message} />
-      </div>
-    );
-  }
+				<TabsContent value="Arrival">
+					{overview
+						.filter((item) => item.type === "arrival")
+						.map((item, i) => (
+							<OverviewItem key={i} reservation={item} />
+						))}
+				</TabsContent>
+
+				<TabsContent value="Stay-over">
+					<Message message="No stay-over reservation" />
+				</TabsContent>
+			</Tabs>
+		);
+	} catch (error) {
+		return (
+			<div className="h-[30vh]">
+				<Message message={(error as Error).message} />
+			</div>
+		);
+	}
 }

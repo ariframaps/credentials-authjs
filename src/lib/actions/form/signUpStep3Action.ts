@@ -64,7 +64,6 @@ export async function signUpStep3Action(
 	});
 
 	if (!parsed.success) {
-		console.log(parsed.error.issues);
 		const errors: Record<string, string> = {};
 		for (const issue of parsed.error.issues) {
 			const field = issue.path[0] as string;

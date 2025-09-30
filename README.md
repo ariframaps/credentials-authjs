@@ -7,42 +7,41 @@ It covers user authentication (sign-up, sign-in, reset password) and a business 
 
 ## 🚀 Features
 
-- **Authentication**
-  - Sign Up (multi-step: email → contact info → password → email verification)
-  - Sign In (two-step: email → password, with session persistence)
-  - Reset Password (request reset link → inbox notification page)
-  - Sign Out
-- **Business Dashboard**
-  - Protected route (requires authentication)
-  - Responsive UI for desktop, tablet, and mobile
-- **Styling**
-  - SASS for layout structure (grid, mixins, variables)
-  - TailwindCSS for utilities and component styling
-  - ShadCN UI for accessible prebuilt components
-- **API Integration**
-  - Integrated with GoForUmroh API
-    +- **Other**
-  - Retina image support
-  - Custom web fonts as per Figma design
-  - Form validation on all steps (client-side + API validation)
-  - State persistence for multi-step forms
-  - Clean code with TypeScript types
-  - Deployable to Vercel
+-   **Authentication**
+    -   Sign Up (multi-step: email → contact info → password → email verification)
+    -   Sign In (two-step: email → password, with session persistence)
+    -   Reset Password (request reset link → inbox notification page)
+    -   Sign Out
+-   **Business Dashboard**
+    -   Protected route (requires authentication)
+    -   Responsive UI for desktop, tablet, and mobile
+-   **Styling**
+    -   SASS for layout structure (grid, mixins, variables)
+    -   TailwindCSS for utilities and component styling
+    -   ShadCN UI for accessible prebuilt components
+-   **API Integration**
+    -   Integrated with GoForUmroh API
+        +- **Other**
+    -   Retina image support
+    -   Custom web fonts as per Figma design
+    -   Form validation on all steps (client-side + API validation)
+    -   State persistence for multi-step forms
+    -   Clean code with TypeScript types
+    -   Deployable to Vercel
 
 ---
 
 ## 🛠️ Tech Stack
 
-- [Next.js (App Router)](https://nextjs.org/) – Framework for React with SSR/SSG/ISR support
-- [TypeScript](https://www.typescriptlang.org/) – Type-safe development
-- [SASS](https://sass-lang.com/) – For global layout structure (grid, mixins, variables)
-- [TailwindCSS](https://tailwindcss.com/) – Utility-first styling
-- [ShadCN UI](https://ui.shadcn.com/) – Accessible prebuilt UI components
-- [Auth.js (NextAuth v5)](https://authjs.dev/) – Authentication and session handling
-- [Zod](https://zod.dev/) – Schema validation for forms and API responses
-- [React Hook Form](https://react-hook-form.com/) – Form handling with performance focus
-- [Zustand](https://zustand-demo.pmnd.rs/) – Lightweight global state management
-- [ESLint + Prettier](https://eslint.org/) – Code linting and formatting
+-   [Next.js (App Router)](https://nextjs.org/) – Framework for React with SSR/SSG/ISR support
+-   [TypeScript](https://www.typescriptlang.org/) – Type-safe development
+-   [SASS](https://sass-lang.com/) – For global layout structure (grid, mixins, variables)
+-   [TailwindCSS](https://tailwindcss.com/) – Utility-first styling
+-   [ShadCN UI](https://ui.shadcn.com/) – Accessible prebuilt UI components
+-   [Auth.js (NextAuth v5)](https://authjs.dev/) – Authentication and session handling
+-   [Zod](https://zod.dev/) – Schema validation for forms and API responses
+-   [Zustand](https://zustand-demo.pmnd.rs/) – Lightweight global state management
+-   [ESLint + Prettier](https://eslint.org/) – Code linting and formatting
 
 ---
 

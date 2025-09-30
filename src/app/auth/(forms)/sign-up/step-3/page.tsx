@@ -13,10 +13,13 @@ import { XCircleIcon } from "lucide-react";
 import LoadingComponent from "@/components/LoadingComponent";
 import { useActionState, useEffect } from "react";
 import { signUpStep3Action } from "@/lib/actions/form/signUpStep3Action";
+import { useSignInStore } from "@/lib/stores/signinStore";
 
 export default function Page() {
 	const router = useRouter();
 	const formData = useSignUpStore((state) => state.formData);
+	const resetSignUpState = useSignUpStore((state) => state.reset);
+	const setSignInState = useSignInStore((state) => state.setFormData);
 	const [state, formAction, isPending] = useActionState(
 		signUpStep3Action,
 		null
@@ -41,10 +44,19 @@ export default function Page() {
 
 		// if success
 		if (state?.success) {
+			setSignInState({ email: formData.email as string });
+			resetSignUpState();
 			router.push("/auth/verify-account");
 			return;
 		}
-	}, [state, state?.success, router]);
+	}, [
+		state,
+		state?.success,
+		router,
+		formData.email,
+		resetSignUpState,
+		setSignInState,
+	]);
 
 	return (
 		<div className={`${styles.container}`}>

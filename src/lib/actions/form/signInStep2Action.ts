@@ -15,8 +15,6 @@ export async function signInStep2Action(
 	prevState: SignInStep2Result | null,
 	formData: FormData
 ): Promise<SignInStep2Result> {
-	console.log(prevState);
-
 	const email = (formData.get("email") as string) || "";
 	const password = (formData.get("password") as string) || "";
 

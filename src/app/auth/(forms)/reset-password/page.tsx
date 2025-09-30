@@ -7,33 +7,45 @@ import { InputComponent } from "@/components/InputComponent";
 import FormHeader from "@/components/FormHeader";
 import Link from "next/link";
 import LeftArrow from "@/components/svg/LeftArrow";
-import { XCircleIcon } from "lucide-react";
 import LoadingComponent from "@/components/LoadingComponent";
 import { requestResetPassword } from "@/lib/actions/resetPassword";
-
-// const resetPasswordSchema = FormsSchema.pick({
-//   email: true,
-// });
-// type ResetPasswordType = z.infer<typeof resetPasswordSchema>;
+import { useRouter } from "next/navigation";
+import { FormEvent, useState } from "react";
+import { useSignInStore } from "@/lib/stores/signinStore";
+import { checkIsEmailExits } from "@/lib/actions/checkIsEmailExists";
+import { useSignUpStore } from "@/lib/stores/signupStore";
 
 export default function Page() {
-	// const router = useRouter();
-	// const form = useForm<{email: string}>({
-	//   // resolver: zodResolver(resetPasswordSchema),
-	// });
+	const router = useRouter();
+	const [email, setEmail] = useState<string>("");
+	const [state, setState] = useState<null | "pending" | "error">(null);
+	const [error, setError] = useState<string>("");
+	const setSignInState = useSignInStore((state) => state.setFormData);
+	const resetSignUpState = useSignUpStore((state) => state.reset);
 
-	const onSubmit = async (data: { email: string }) => {
+	const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		setState("pending");
+
 		try {
-			await requestResetPassword(data.email);
-			// router.push("/auth/request-reset-password-sent");
+			const isEmailExists = await checkIsEmailExits(email);
+			if (!isEmailExists) throw new Error("Email not found");
+
+			await requestResetPassword(email);
+
+			setSignInState({ email });
+			resetSignUpState();
+			router.push("/auth/request-reset-password-sent");
+			setState(null);
 			return;
 		} catch (err) {
 			if (err instanceof Error) {
-				// form.setError("root", {
-				//   type: "manual",
-				//   message: err.message,
-				// });
+				setError(err.message);
+			} else {
+				setError("Something went wrong");
 			}
+
+			setState("error");
 		}
 	};
 
@@ -64,51 +76,31 @@ export default function Page() {
 
 			{/* form */}
 			<form
-				// onSubmit={form.handleSubmit(onSubmit)}
+				onSubmit={(e) => onSubmit(e)}
 				className={`${styles.container__form}`}>
 				<div className={`${styles.container__form__inputs}`}>
 					<InputComponent
 						name={"email"}
 						label={"Email Address"}
-						isError={
-							"form.formState.errors.email ? true : false" ===
-							"form.formState.errors.email ? true : false"
-						}
-						message={"form.formState.errors.email?.message"}>
+						isError={state === "error"}
+						message={error}>
 						<Input
-							// {...form.register("email")}
+							value={email}
+							onChange={(e) => setEmail(e.target.value)}
 							type="text"
 							name="email"
-							// isError={form.formState.errors.email ? true : false}
+							isError={state === "error"}
 							id="email"
 							placeholder="Enter your email address"
 						/>
 					</InputComponent>
 				</div>
-				{/* {form.formState.errors.root && (
-          <div
-            className={`${styles.container__form__info} bg-red-50 border-l-[6px] border-text-danger-tertiary rounded-[8px]`}>
-            <XCircleIcon
-              width={28}
-              height={28}
-              className="text-text-danger-tertiary"
-            />
-            <span className="text-[12px] font-normal text-red-800">
-              {form.formState.errors.root?.message}
-            </span>
-          </div>
-        )} */}
-				<Button
-					disabled={
-						"form.formState.isSubmitting" ===
-						"form.formState.isSubmitting"
-					}
-					type="submit">
-					{/* {form.formState.isSubmitting ? (
-            <LoadingComponent size={20} />
-          ) : (
-            "Continue"
-          )} */}
+				<Button disabled={state === "pending"} type="submit">
+					{state === "pending" ? (
+						<LoadingComponent size={20} />
+					) : (
+						"Continue"
+					)}
 				</Button>
 				<span className="w-full block h-[1px] bg-neutral-separator"></span>
 			</form>

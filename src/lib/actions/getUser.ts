@@ -1,9 +1,10 @@
 "use server";
 
 import { User } from "next-auth";
-import { sessionCheck } from "./sessionCheck";
+import { auth } from "@/auth";
 
 export default async function getUser(): Promise<User | null> {
-  const res = await sessionCheck();
-  return res;
+	const session = await auth();
+	if (!session || !session.user) return null;
+	return session.user;
 }

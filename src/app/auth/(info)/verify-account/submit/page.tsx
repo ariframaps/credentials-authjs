@@ -2,149 +2,128 @@
 
 import styles from "@/styles/_infopage.module.scss";
 import { Button } from "@/components/ui/button";
-import { useSignUpStore } from "@/lib/stores/signupStore";
 import { Input } from "@/components/ui/input";
 import LoadingComponent from "@/components/LoadingComponent";
 import { useRouter } from "next/navigation";
-import { FormsSchema } from "@/types/formsSchema";
-import z from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { InputComponent } from "@/components/InputComponent";
 import { XCircleIcon } from "lucide-react";
-import { verifyEmail } from "@/lib/actions/verifyEmail";
-import { resendEmailVerification } from "@/lib/actions/resendEmailVerification";
-
-const submitResetPasswordSchema = FormsSchema.pick({
-  code: true,
-  email: true,
-});
-type SubmitResetPasswordType = z.infer<typeof submitResetPasswordSchema>;
+import { useActionState, useEffect } from "react";
+import { verifyAccountAction } from "@/lib/actions/form/verifyAccountAction";
+import { useSignInStore } from "@/lib/stores/signinStore";
 
 export default function Page() {
-  const router = useRouter();
-  const formData = useSignUpStore((state) => state.formData);
-  const form = useForm<SubmitResetPasswordType>({
-    resolver: zodResolver(submitResetPasswordSchema),
-  });
+	const router = useRouter();
+	const resetSignInState = useSignInStore((state) => state.reset);
+	const [state, formAction, isPending] = useActionState(
+		verifyAccountAction,
+		null
+	);
 
-  const onSubmit = async (data: SubmitResetPasswordType) => {
-    if (!formData.email) {
-      router.push("/auth/sign-up/step-1");
-      return;
-    }
+	useEffect(() => {
+		if (state?.success) {
+			resetSignInState();
+			router.push("/auth/sign-in/step-1");
+		}
+	}, [state, state?.success, router, resetSignInState]);
 
-    try {
-      await verifyEmail(data.email, data.code);
-      alert("Account successfully verificated. please log-in to continue");
-      router.push("/auth/sign-in/step-1");
-    } catch (err) {
-      if (err instanceof Error) {
-        form.setError("root", {
-          type: "manual",
-          message: err.message,
-        });
-      }
-    }
-  };
-
-  const resendVerif = async () => {
-    if (!formData.email) {
-      router.push("/auth/sign-up/step-1");
-      return;
-    }
-
-    try {
-      await resendEmailVerification(formData.email);
-      alert("Verification email successfully resent");
-    } catch (err) {
-      if (err instanceof Error) {
-        form.setError("root", {
-          type: "manual",
-          message: err.message,
-        });
-      }
-    }
-  };
-
-  return (
-    <div className={`${styles.main}`}>
-      <section className={`${styles.main__container}`}>
-        <div className={`${styles.main__container__info}`}>
-          <h1 className="text-[36px] font-semibold text-neutral-primary">
-            Enter verify code here
-          </h1>
-          <p className="text-[16px] font-normal text-neutral-secondary">
-            We sent you an email with a verification link to{" "}
-            <span className="font-semibold">{formData.email || ""}</span>. To
-            confirm your account please input the code in the email we just
-            sent.
-          </p>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="">
-            <div className="mb-5">
-              <InputComponent
-                name={"email"}
-                label={"Email Address"}
-                isError={form.formState.errors.email ? true : false}
-                message={form.formState.errors.email?.message}>
-                <Input
-                  {...form.register("email")}
-                  type="text"
-                  name="email"
-                  isError={form.formState.errors.email ? true : false}
-                  id="email"
-                  placeholder="Enter your email address"
-                />
-              </InputComponent>
-              <InputComponent
-                name={"code"}
-                label={"code"}
-                isError={form.formState.errors.code ? true : false}
-                message={form.formState.errors.code?.message}>
-                <Input
-                  {...form.register("code")}
-                  type="text"
-                  name="code"
-                  isError={form.formState.errors.code ? true : false}
-                  id="code"
-                  placeholder="Enter your code here"
-                />
-              </InputComponent>
-            </div>
-            {form.formState.errors.root && (
-              <div
-                className={`flex items-center p-3 mb-5 gap-2 bg-red-50 border-l-[6px] border-text-danger-tertiary rounded-[8px]`}>
-                <XCircleIcon
-                  width={20}
-                  height={20}
-                  className="text-text-danger-tertiary"
-                />
-                <span className="text-[14px] font-normal text-start text-red-800">
-                  {form.formState.errors.root?.message}
-                </span>
-              </div>
-            )}
-            <Button disabled={form.formState.isSubmitting} type="submit">
-              {form.formState.isSubmitting ? (
-                <LoadingComponent size={20} />
-              ) : (
-                "Verify"
-              )}
-            </Button>
-          </form>
-          <Button
-            onClick={() => resendVerif()}
-            disabled={form.formState.isSubmitting}
-            type="button"
-            variant={"transparent"}>
-            {form.formState.isSubmitting ? (
-              <LoadingComponent size={20} />
-            ) : (
-              "Resend"
-            )}
-          </Button>
-        </div>
-      </section>
-    </div>
-  );
+	return (
+		<div className={`${styles.main}`}>
+			<section className={`${styles.main__container}`}>
+				<div className={`${styles.main__container__info}`}>
+					<h1 className="text-[36px] font-semibold text-neutral-primary">
+						Enter verify code here
+					</h1>
+					<p className="text-[16px] font-normal text-neutral-secondary">
+						To confirm your account please input the code in the
+						email we just sent.
+					</p>
+					<form
+						action={formAction}
+						// onSubmit={form.handleSubmit(onSubmit)}
+					>
+						<div className="mb-5">
+							<InputComponent
+								name={"email"}
+								label={"Email Address"}
+								isError={
+									state?.success
+										? false
+										: !!state?.errors.email
+								}
+								message={
+									state?.success
+										? undefined
+										: state?.errors.email
+								}>
+								<Input
+									// {...form.register("email")}
+									type="text"
+									name="email"
+									defaultValue={
+										!state?.success ? state?.email : ""
+									}
+									isError={
+										state?.success
+											? false
+											: !!state?.errors.email
+									}
+									id="email"
+									placeholder="Enter your email address"
+								/>
+							</InputComponent>
+							<InputComponent
+								name={"code"}
+								label={"code"}
+								isError={
+									state?.success
+										? false
+										: !!state?.errors.code
+								}
+								message={
+									state?.success
+										? undefined
+										: state?.errors.code
+								}>
+								<Input
+									// {...form.register("code")}
+									type="text"
+									name="code"
+									defaultValue={
+										!state?.success ? state?.code : ""
+									}
+									isError={
+										state?.success
+											? false
+											: !!state?.errors.code
+									}
+									id="code"
+									placeholder="Enter your code here"
+								/>
+							</InputComponent>
+						</div>
+						{!state?.success && state?.errors.root && (
+							<div
+								className={`flex items-center p-3 mb-5 gap-2 bg-red-50 border-l-[6px] border-text-danger-tertiary rounded-[8px]`}>
+								<XCircleIcon
+									width={20}
+									height={20}
+									className="text-text-danger-tertiary"
+								/>
+								<span className="text-[14px] font-normal text-start text-red-800">
+									{state.errors.root}
+								</span>
+							</div>
+						)}
+						<Button disabled={isPending} type="submit">
+							{isPending ? (
+								<LoadingComponent size={20} />
+							) : (
+								"Verify"
+							)}
+						</Button>
+					</form>
+				</div>
+			</section>
+		</div>
+	);
 }

@@ -11,7 +11,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 				<Header />
 				<main className={`${styles.content__main}`}>{children}</main>
 			</div>
-			<SessionAlert />
+			{/* <SessionAlert /> */}
 		</div>
 	);
 }

@@ -14,6 +14,7 @@ import LoadingComponent from "@/components/LoadingComponent";
 import { useActionState, useEffect } from "react";
 import { signInStep2Action } from "@/lib/actions/form/signInStep2Action";
 import { useSignUpStore } from "@/lib/stores/signupStore";
+import { SESSION_MAX_AGE } from "@/lib/constants";
 
 export default function Page() {
 	const router = useRouter();
@@ -36,7 +37,10 @@ export default function Page() {
 		if (state?.success) {
 			resetSignInState();
 			resetSignUpState();
+			const expiry = Date.now() + SESSION_MAX_AGE * 1000;
+			localStorage.setItem("sessionExpiry", expiry.toString());
 			router.push("/dashboard");
+			return;
 		}
 	}, [state, state?.success, router, resetSignInState, resetSignUpState]);
 

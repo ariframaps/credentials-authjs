@@ -61,12 +61,12 @@ const OverviewItem = ({ reservation }: { reservation: Reservation }) => {
 			</span>
 			<Button
 				variant={"noborder"}
-				className="block xs:hidden p-0 h-min w-min text-start xs:w-fit">
+				className={`${styles.container__btn} block xs:hidden p-0 h-min w-min text-start xs:w-fit`}>
 				More
 			</Button>
 			<Button
 				variant={"noborder"}
-				className="hidden xs:block p-0 w-fit h-min">
+				className={`${styles.container__btn} hidden xs:block p-0 h-min`}>
 				Detail Order
 			</Button>
 		</div>

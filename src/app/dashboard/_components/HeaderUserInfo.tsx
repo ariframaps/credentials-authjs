@@ -73,7 +73,12 @@ const HeaderUserInfo = async () => {
 				</DropdownMenuGroup>
 				<DropdownMenuSeparator />
 				<DropdownMenuGroup>
-					<DropdownMenuItem className="flex" onClick={Logout}>
+					<DropdownMenuItem
+						className="flex"
+						onClick={() => {
+							localStorage.removeItem("sessionExpiry");
+							Logout();
+						}}>
 						Log out
 						<DropdownMenuShortcut>
 							<LogOut />

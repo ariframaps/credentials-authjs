@@ -16,7 +16,6 @@ export async function middleware(req: NextRequest) {
 			pathname === "/auth" ||
 			pathname === "/auth/sign-in" ||
 			pathname === "/dashboard" ||
-			pathname === "/" ||
 			pathname === "/auth/sign-up"
 		) {
 			return NextResponse.redirect(

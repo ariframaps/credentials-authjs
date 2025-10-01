@@ -1,106 +1,118 @@
 @use "@/styles/mixins" as m;
 
 .container {
-  padding-block: 24px;
-  padding-inline: 24px 32px;
-  display: grid;
-  grid-template-columns: 50px 2fr 1fr 2fr 1fr 1.5fr;
-  gap: 16px;
+	padding-block: 24px;
+	padding-inline: 24px 32px;
+	display: grid;
+	grid-template-columns: 50px 2fr 1fr 2fr 1fr 1.5fr;
+	gap: 16px;
 
-  @include m.media(desktop) {
-    grid-template-columns: 50px 2.5fr 1.5fr 1.5fr 1fr 1fr;
-  }
-  @include m.media(laptop) {
-    grid-template-columns: 50px 2fr 1.5fr 1fr;
-  }
-  @include m.media(tablet) {
-    grid-template-columns: 50px 2fr 2fr 1fr;
-  }
+	@include m.media(desktop) {
+		grid-template-columns: 50px 2fr 1fr 1.5fr 1fr 0.7fr;
+	}
+	@include m.media(laptop) {
+		grid-template-columns: 50px 2fr 1.5fr 1fr;
+	}
+	@include m.media(tablet) {
+		grid-template-columns: 50px 2fr 2fr 1fr;
+	}
 
-  @include m.media(phone) {
-    gap: 6px;
-    grid-template-columns: 50px 2fr max-content;
-    padding: 8px !important;
-  }
+	@include m.media(phone) {
+		gap: 6px;
+		grid-template-columns: 50px 2fr max-content;
+		padding: 8px !important;
+	}
 
-  * {
-    flex-shrink: 0;
-  }
+	* {
+		flex-shrink: 0;
+	}
 
-  > :last-child {
-    justify-self: end;
-  }
+	> :last-child {
+		justify-self: end;
+	}
 
-  &__img {
-    width: 48px;
-    height: 48px;
-    object-fit: contain;
-    @include m.media(phone) {
-      width: 40px;
-      height: 40px;
-    }
-  }
+	&__img {
+		width: 48px;
+		height: 48px;
+		object-fit: contain;
+		@include m.media(phone) {
+			width: 40px;
+			height: 40px;
+		}
+	}
 
-  &__detail1 {
-    width: min-content;
-    @include m.flex($direction: column, $gap: 8px, $justify: start);
+	&__detail1 {
+		width: min-content;
+		@include m.flex($direction: column, $gap: 8px, $justify: start);
 
-    @include m.media(tablet) {
-      gap: 2px;
-      width: max-content;
-    }
+		@include m.media(tablet) {
+			gap: 2px;
+			width: max-content;
+		}
 
-    &__info {
-      @include m.flex($justify: space-between, $gap: 12px, $align: center);
-      @include m.media(phone) {
-        gap: 8px;
-      }
+		&__info {
+			@include m.flex(
+				$justify: space-between,
+				$gap: 12px,
+				$align: center
+			);
+			@include m.media(phone) {
+				gap: 8px;
+			}
 
-      &__divider {
-        width: 5px;
-        height: 5px;
-        border-radius: 100%;
-        background-color: #f1f3f5;
+			&__divider {
+				width: 5px;
+				height: 5px;
+				border-radius: 100%;
+				background-color: #f1f3f5;
 
-        @include m.media(laptop) {
-          display: none !important;
-        }
-      }
+				@include m.media(laptop) {
+					display: none !important;
+				}
+			}
 
-      & > * {
-        @include m.flex($align: center, $gap: 12px);
-      }
+			& > * {
+				@include m.flex($align: center, $gap: 12px);
+			}
 
-      @include m.media(tablet) {
-        & :first-child {
-          display: none;
-        }
-      }
-    }
-  }
+			@include m.media(tablet) {
+				& :first-child {
+					display: none;
+				}
+			}
+		}
+	}
 
-  &__detail2 {
-    padding-inline: 10px;
-    @include m.media(laptop) {
-      display: none !important;
-    }
-  }
+	&__detail2 {
+		justify-self: center;
+		padding-inline: 10px;
+		@include m.media(laptop) {
+			display: none !important;
+		}
+	}
 
-  &__detail3 {
-    @include m.flex($direction: column, $gap: 12px, $justify: start);
+	&__detail3 {
+		@include m.flex($direction: column, $gap: 12px, $justify: start);
 
-    @include m.media(phone) {
-      display: none !important;
-    }
+		@include m.media(phone) {
+			display: none !important;
+		}
 
-    & > div {
-      @include m.flex($gap: 12px, $justify: start, $align: center);
-    }
-  }
+		& > div {
+			@include m.flex($gap: 12px, $justify: start, $align: center);
+		}
+	}
 
-  &__detail4 {
-    @include m.media(laptop) {
-      display: none !important;
-    }
-  }
+	&__detail4 {
+		@include m.media(desktop) {
+			justify-self: center;
+		}
+		@include m.media(laptop) {
+			display: none !important;
+		}
+	}
+
+	&__btn {
+		// width: max-content;
+	}
 }

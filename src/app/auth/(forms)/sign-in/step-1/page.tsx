@@ -17,7 +17,7 @@ import { signInStep1Action } from "@/lib/actions/form/signInStep1Action";
 export default function Page() {
 	const router = useRouter();
 	const formData = useSignInStore((s) => s.formData);
-	const setFormData = useSignInStore((s) => s.setFormData);
+	const setSignInStore = useSignInStore((s) => s.setFormData);
 	const [state, formAction, isPending] = useActionState(
 		signInStep1Action,
 		null
@@ -26,10 +26,10 @@ export default function Page() {
 	// iF success → update zustand + redirect
 	useEffect(() => {
 		if (state?.success) {
-			setFormData({ email: state.email });
+			setSignInStore({ email: state.email });
 			router.push("/auth/sign-in/step-2");
 		}
-	}, [state, setFormData, router]);
+	}, [state, setSignInStore, router]);
 
 	return (
 		<div className={styles.container}>

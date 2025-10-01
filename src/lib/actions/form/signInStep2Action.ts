@@ -24,8 +24,8 @@ export async function signInStep2Action(
 			success: false,
 			password: password ?? "",
 			errors: {
-				email: "no email",
-				root: "Email is required! redirecting..",
+				email: "Email is required!",
+				root: "Email is required!",
 			},
 		};
 	}

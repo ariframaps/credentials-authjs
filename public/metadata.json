@@ -1,0 +1,55 @@
+{
+  "title": "GoForUmrah Auth Flow",
+  "category": "client_public",
+  "description": "A production-style authentication flow and business dashboard built as a frontend technical assessment for GoForUmrah. The project includes multi-step sign-up, secure sign-in, password reset flow, protected dashboard routes, API integration, and responsive UI implementation based on a Figma design system.",
+  "shortDesc": "Production-ready authentication flow with multi-step onboarding and protected dashboard.",
+  "tags": [
+    "next.js",
+    "typescript",
+    "auth.js",
+    "nextauth",
+    "zod",
+    "react-hook-form",
+    "zustand",
+    "tailwindcss",
+    "sass",
+    "shadcn-ui"
+  ],
+  "role": "Frontend Developer",
+  "year": "2025",
+  "confidentialNote": null,
+  "details": {
+    "overview": "This project was built as a frontend technical assessment for GoForUmrah. The goal was to create a modern authentication experience and a protected business dashboard using Next.js App Router and Auth.js. The implementation focused heavily on user experience, form validation, responsive layouts, and maintainable frontend architecture.",
+    "problem": "The challenge was to build a complete authentication system that felt production-ready while maintaining clean architecture and a smooth user experience. The application required multi-step onboarding, session persistence, API integration, protected routes, responsive layouts, and robust form validation across multiple authentication flows.",
+    "solution": "I built the application using Next.js App Router with TypeScript for scalability and type safety. Authentication and session handling were implemented with Auth.js (NextAuth v5). Multi-step forms were managed using React Hook Form and Zod schema validation, while Zustand handled temporary onboarding state persistence. The UI was developed from a Figma design using TailwindCSS, SASS, and ShadCN UI components to ensure accessibility and responsive behavior across devices.",
+    "timeline": [
+      {
+        "date": "Aug 2025",
+        "label": "Project setup & architecture planning"
+      },
+      {
+        "date": "Aug 2025",
+        "label": "Authentication flow implementation"
+      },
+      {
+        "date": "Aug 2025",
+        "label": "Dashboard & protected route development"
+      },
+      {
+        "date": "Aug 2025",
+        "label": "Responsive UI polish & deployment"
+      }
+    ],
+    "highlights": [
+      "Multi-step sign-up flow with validation and state persistence",
+      "Two-step sign-in experience with session persistence",
+      "Protected dashboard routes using Auth.js middleware",
+      "Form validation using Zod + React Hook Form",
+      "Responsive implementation for mobile, tablet, and desktop",
+      "Reusable component architecture based on Figma design system",
+      "Integrated external API endpoints with proper error handling",
+      "Built with Next.js App Router and TypeScript best practices"
+    ],
+    "outcome": "Successfully completed the frontend assessment with a fully functional authentication system and responsive dashboard experience. The project demonstrates strong frontend engineering practices, scalable architecture decisions, and the ability to transform Figma designs into production-quality interfaces."
+  }
+}
